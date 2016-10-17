@@ -1,0 +1,22 @@
+{
+  "name": "codasci",
+  "private": true,
+  "scripts": {
+    "start": "meteor run"
+  },
+  "dependencies": {
+    "color": "^0.11.3",
+    "genetic-experience-management": "0.0.1",
+    "lodash": "^4.16.4",
+    "meteor-node-stubs": "~0.2.0",
+    "moment": "^2.15.1",
+    "radium": "^0.18.1",
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2",
+    "react-mdl": "^1.7.2",
+    "react-motion": "^0.4.5",
+    "react-redux": "^4.4.5",
+    "react-router": "^2.8.1",
+    "redux": "^3.6.0"
+  }
+}
