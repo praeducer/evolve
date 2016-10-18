@@ -7,14 +7,18 @@ import { Grid, Cell } from 'react-mdl';
 export class BusinessCard extends React.Component {
   render() {
     return(
-      <Card shadow={1} style={[{margin: 'auto'}, this.props.style]}>
-        <CardTitle style={[this.props.style]}>
-          Paul Prae
-        </CardTitle>
-        <CardText style={[this.props.style]}>
-          I’m a solutions architect who creates collaborative web technology to improve business and society. I build interactive systems that augment cognitive abilities and scale impact.
-        </CardText>
-      </Card>
+      <div style={[{margin: 'auto'}, this.props.style]}>
+        <Card shadow={1} style={this.props.styles.card}>
+          <CardTitle>
+            <div style={this.props.styles.title}>
+              Paul Prae
+            </div>
+          </CardTitle>
+          <CardText style={this.props.styles.text}>
+            I’m a solutions architect who creates collaborative web technology to improve business and society. I build interactive systems that augment cognitive abilities and scale impact.
+          </CardText>
+        </Card>
+      </div>
     );
   }
 }
