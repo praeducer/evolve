@@ -1,6 +1,7 @@
 import React from 'react';
 import Radium from 'radium';
 import { BusinessCard } from '/lib/Card.jsx';
+import { Link } from 'react-router';
 
 @Radium
 export class App extends React.Component {
@@ -11,18 +12,32 @@ export class App extends React.Component {
     this.state = {
       theme: {
         businessCard: {
-          backgroundColor: "white",
-          color: "black",
-          fontFamily: "arial"
+          card: {
+            backgroundColor: "white"
+          },
+          title: {
+            color: "black",
+            fontWeight: 500
+          },
+          text: {
+            color: "black",
+            fontWeight: 500
+          },
         }
       }
     };
   }
+
   render() {
     return(
-      <BusinessCard style={[
-        this.state.theme.businessCard
-      ]} />
+      <div>
+        <BusinessCard styles={this.state.theme.businessCard} />
+        <p>
+          <Link to="/demo/genetic">
+            Suite this to your tastes?
+          </Link>
+        </p>
+      </div>
     );
   }
 }
