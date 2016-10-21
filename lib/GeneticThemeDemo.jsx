@@ -42,13 +42,12 @@ export class GeneticThemeDemo extends React.Component {
   }
   decodeFontWeight(traits) {
     if (Color(traits[1]).luminosity() > Color(traits[traits.length-1]).luminosity())
-      return 700;
-    return 500;
+      return 700; // Bold
+    return 500; // Normal
   }
   decodeFontFamily(traits) {
     var d = Color(traits[0]).luminosity() - Color(traits[traits.length-2]).luminosity();
     var font = Fonts[Math.floor(Math.sqrt(Math.abs(d)) * Fonts.length)];
-    console.log(font, d);
     return font;
   }
   convertIndividualToStyle({traits}) {
