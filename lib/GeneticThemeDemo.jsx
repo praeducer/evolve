@@ -2,7 +2,7 @@ import React from 'react';
 import Radium from 'radium';
 import Color from 'color';
 import { Grid, Cell } from 'react-mdl';
-import { Individual, Population, Genome } from '/imports/genetic-experience-management';
+import { Individual, Population, Genome } from '/imports/genetic-experience-management/src';
 import { Choose } from '/lib/Choose.jsx';
 import { BusinessCard } from '/lib/Card.jsx';
 
@@ -10,6 +10,7 @@ if (Meteor.isClient) {
   window.Population = Population;
   window.Individual = Individual;
   window.Genome = Genome;
+  window.Color = Color;
 }
 export const Fonts = ["Open Sans", "Josefin Slab", "Arvo", "Lato", "Vollkorn", "Abril Fatface", "Ubuntu", "PT Sans", "PT Serif", "Old Standard TT", "Droid Sans", "Anivers", "Junction", "Fertigo", "Aller", "Audimat", "Delicious", "Prociono"];
 
@@ -17,59 +18,67 @@ export class GeneticThemeDemo extends React.Component {
   constructor() {
     super();
     this.state = {
-      population: new Population()
+      population: new Population({
+        size: 12,
+        phenotype: {
+          mutate: {
+            substitution: 0.06,
+            upper: 25,
+            lower: 25
+          },
+          crossover: {
+            crossover: 0.5,
+            modify: true
+          },
+          style: {
+            container: {
+            },
+            title: {
+              color: this.decodeColor(0),
+              fontWeight: [500, 700],
+              fontFamily: Fonts,
+              fontSize: ['x-large', 'xx-large']
+            },
+            text: {
+              color: this.decodeColor(-1),
+              fontWeight: [500, 700],
+              fontFamily: Fonts,
+            },
+            card: {
+              cursor: 'pointer',
+              backgroundColor: this.decodeColor(1),
+            }
+          }
+        }
+      }).evolve()
     };
   }
   addChoice(choice) {
-    var individual = this.state.population.currentGeneration[choice];
+    let { identifier } = this.state.population.individuals[choice];
     this.setState({
-      population: this.state.population.evolveFromSelection(individual)
+      population: this.state.population.evolve({
+        fitness: ((individual) => {
+          return individual.identifier === identifier;
+        }),
+        comparison: ({value: a}, {value: b}) => (a && !b)? -1: (!a && b)? 1: 0,
+        groups: this.state.population.individuals.length
+      })
     })
   }
-  decodeColor(traits) {
-    return traits.reduce((blend, color, index) => {
-      if (index % 2 === 0)
-        return blend.mix(Color(color));
-      return blend;
-    }, Color('#fff')).rgbString()
-  }
-  decodeBackgroundColor(traits) {
-    return traits.slice(6).reduce((blend, color, index) => {
-      if (index % 2 === 1)
-        return blend.mix(Color(color));
-      return blend;
-    }, Color('#fff')).rgbString()
-  }
-  decodeFontWeight(traits) {
-    if (Color(traits[1]).luminosity() > Color(traits[traits.length-1]).luminosity())
-      return 700;
-    return 500;
-  }
-  decodeFontFamily(traits) {
-    var d = Color(traits[0]).luminosity() - Color(traits[traits.length-2]).luminosity();
-    var font = Fonts[Math.floor(Math.sqrt(Math.abs(d)) * Fonts.length)];
-    console.log(font, d);
-    return font;
-  }
-  convertIndividualToStyle({traits}) {
-    return {
-      container: {
-      },
-      title: {
-        color: this.decodeColor(traits),
-        fontWeight: this.decodeFontWeight(traits.slice(4, 8)),
-        fontFamily: this.decodeFontFamily(traits.slice(4, 8)),
-        fontSize: 'x-large'
-      },
-      text: {
-        color: this.decodeColor(traits),
-        fontWeight: this.decodeFontWeight(traits),
-        fontFamily: this.decodeFontFamily(traits)
-      },
-      card: {
-        backgroundColor: this.decodeBackgroundColor(traits),
+  decodeColor(o) {
+    return ((genome, start) => {
+      let ordinal = o;
+      if (o == -1) {
+        ordinal = (genome[genome.length-1] > 0.5)? 0: 2;
       }
-    };
+      return Color({
+        r: 255 * genome[start + ordinal * 5 + 0],
+        g: 255 * genome[start + ordinal * 5 + 1],
+        b: 255 * genome[start + ordinal * 5 + 2],
+        s: 100 * genome[start + ordinal * 5 + 3],
+        l: 100 * genome[start + ordinal * 5 + 4]
+      }).rgbString()
+    });
   }
   renderStyledElement(style, index) {
     return(
@@ -79,8 +88,7 @@ export class GeneticThemeDemo extends React.Component {
     );
   }
   render() {
-    var individuals = this.state.population.currentGeneration;
-    var styles = individuals.map(this.convertIndividualToStyle, this);
+    var styles = this.state.population.individuals.map((i) => i.traits.style);
     var children = styles.map(this.renderStyledElement, this);
     return(
       <Grid>
