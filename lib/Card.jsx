@@ -7,7 +7,7 @@ import { Grid, Cell } from 'react-mdl';
 export class BusinessCard extends React.Component {
   render() {
     return(
-      <div style={[{margin: 'auto'}, this.props.style]}>
+      <div style={this.props.style}>
         <Card shadow={1} style={this.props.styles.card}>
           <CardTitle>
             <div style={this.props.styles.title}>

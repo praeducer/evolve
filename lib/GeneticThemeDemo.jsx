@@ -2,16 +2,10 @@ import React from 'react';
 import Radium from 'radium';
 import Color from 'color';
 import { Grid, Cell } from 'react-mdl';
-import { Individual, Population, Genome } from '/imports/genetic-experience-management/src';
-import { Choose } from '/lib/Choose.jsx';
 import { BusinessCard } from '/lib/Card.jsx';
+import { ChatBot } from '/lib/ChatBot.jsx';
+import { Individual, Population, Genome } from '/imports/genetic-experience-management/src';
 
-if (Meteor.isClient) {
-  window.Population = Population;
-  window.Individual = Individual;
-  window.Genome = Genome;
-  window.Color = Color;
-}
 export const Fonts = ["Open Sans", "Josefin Slab", "Arvo", "Lato", "Vollkorn", "Abril Fatface", "Ubuntu", "PT Sans", "PT Serif", "Old Standard TT", "Droid Sans", "Anivers", "Junction", "Fertigo", "Aller", "Audimat", "Delicious", "Prociono"];
 
 export class GeneticThemeDemo extends React.Component {
@@ -22,9 +16,10 @@ export class GeneticThemeDemo extends React.Component {
         size: 12,
         phenotype: {
           mutate: {
-            substitution: 0.06,
-            upper: 25,
-            lower: 25
+            substitution: 0.03,
+            inversion: 0.00,
+            upper: 40,
+            lower: 40
           },
           crossover: {
             crossover: 0.5,
@@ -34,19 +29,19 @@ export class GeneticThemeDemo extends React.Component {
             container: {
             },
             title: {
-              color: this.decodeColor(0),
+              color: this.decodeColor(1),
               fontWeight: [500, 700],
               fontFamily: Fonts,
               fontSize: ['x-large', 'xx-large']
             },
             text: {
-              color: this.decodeColor(-1),
+              color: this.decodeColor(1),
               fontWeight: [500, 700],
               fontFamily: Fonts,
             },
             card: {
               cursor: 'pointer',
-              backgroundColor: this.decodeColor(1),
+              backgroundColor: this.decodeColor(0),
             }
           }
         }
@@ -66,17 +61,17 @@ export class GeneticThemeDemo extends React.Component {
     })
   }
   decodeColor(o) {
+    let sum = (sum, value) => sum + value;
     return ((genome, start) => {
-      let ordinal = o;
-      if (o == -1) {
-        ordinal = (genome[genome.length-1] > 0.5)? 0: 2;
-      }
+      let ostart = start + 3 + o * 9;
+      let hue = 360 * (genome.slice(start, 3).reduce(sum, 0) % 1);
+      let saturation = 100 * (genome.slice(ostart, ostart + 3).reduce(sum, 0) % 1);
+      let lightness = 100 * (genome.slice(ostart + 3, ostart + 6).reduce(sum, 0) % 1);
+      let offhue = 360 * (genome.slice(ostart + 6, ostart + 9).reduce(sum, 0) % 1);
       return Color({
-        r: 255 * genome[start + ordinal * 5 + 0],
-        g: 255 * genome[start + ordinal * 5 + 1],
-        b: 255 * genome[start + ordinal * 5 + 2],
-        s: 100 * genome[start + ordinal * 5 + 3],
-        l: 100 * genome[start + ordinal * 5 + 4]
+        h: (hue + offhue) % 360,
+        s: saturation,
+        l: lightness
       }).rgbString()
     });
   }
@@ -87,13 +82,24 @@ export class GeneticThemeDemo extends React.Component {
       </Cell>
     );
   }
+  getNarration() {
+    return [
+      {message: "Select the one you think looks the best!"},
+      {message: "People are making choices on the web all the time."},
+      {message: "Through intelligent algorithms like this one, we can tailor the web to specific people, while coming to understand them better."},
+      {message: "As you make actions your choices narrow and become more relevant."},
+    ];
+  }
   render() {
     var styles = this.state.population.individuals.map((i) => i.traits.style);
     var children = styles.map(this.renderStyledElement, this);
     return(
-      <Grid>
-        {children}
-      </Grid>
+      <div>
+        <ChatBot style={defaultStyles.chatbot} styles={{chat:{maxWidth:220,},imageContainer:{padding:8,borderRadius:'50%',background:'#fff'}}} chats={this.getNarration()} />
+        <Grid>
+          {children}
+        </Grid>
+      </div>
     );
   }
 }
@@ -102,4 +108,12 @@ GeneticThemeDemo.propTypes = {
 };
 GeneticThemeDemo.defaultProps = {
 };
+let defaultStyles = {
+  chatbot: {
+    position: 'fixed',
+    top: 12,
+    left: 12,
+    zIndex: 2
+  }
+}
 
