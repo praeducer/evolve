@@ -8,6 +8,9 @@ export class CoDaSci extends React.Component {
   render() {
     return (
       <div>
+        This is supposed to be a splash page.
+        <div>
+          These are the people that Paul collaborates with.
         <div>
           Thomas
         </div>
@@ -17,6 +20,7 @@ export class CoDaSci extends React.Component {
         <div>
           Reggie
         </div>
+      </div>
       </div>
     );
   }
