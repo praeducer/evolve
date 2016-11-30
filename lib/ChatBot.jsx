@@ -25,8 +25,8 @@ export class ChatBot extends React.Component {
     let tail = chats[chats.length - 1];
     let time = (tail === undefined)? +new Date: tail.start;
     chats.push({
-      start: time + (2 * 1000), // 4 Second Overlap
-      expires: (8 * 1000) + time, // 8 Second Show
+      start: time + (0.25 * 1000), // 4 Second Overlap
+      expires: (1 * 1000) + time, // 8 Second Show
       message: chat.message
     });
     return chats;

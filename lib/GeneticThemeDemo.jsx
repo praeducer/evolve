@@ -29,7 +29,7 @@ export class GeneticThemeDemo extends React.Component {
             container: {
             },
             title: {
-              color: this.decodeColor(1),
+              color: this.decodeColor(2),
               fontWeight: [500, 700],
               fontFamily: Fonts,
               fontSize: ['x-large', 'xx-large']
