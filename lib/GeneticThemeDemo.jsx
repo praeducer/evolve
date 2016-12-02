@@ -95,7 +95,6 @@ export class GeneticThemeDemo extends React.Component {
     var children = styles.map(this.renderStyledElement, this);
     return(
       <div>
-        <ChatBot style={defaultStyles.chatbot} styles={{chat:{maxWidth:220,},imageContainer:{padding:8,borderRadius:'50%',background:'#fff'}}} chats={this.getNarration()} />
         <Grid>
           {children}
         </Grid>
