@@ -48,7 +48,12 @@ export class GeneticThemeDemo extends React.Component {
       }).evolve()
     };
   }
-  addChoice(choice) {
+  onChoice(choice) {
+    if (this.props.onChoice) {
+      this.props.onChoice(
+        this.state.population.individuals[choice]);
+    }
+
     let { identifier } = this.state.population.individuals[choice];
     this.setState({
       population: this.state.population.evolve({
@@ -77,7 +82,7 @@ export class GeneticThemeDemo extends React.Component {
   }
   renderStyledElement(style, index) {
     return(
-      <Cell key={index} col={3} onClick={() => this.addChoice(index)}>
+      <Cell key={index} col={3} onClick={() => this.onChoice(index)}>
         <BusinessCard style={style.container} styles={style} />
       </Cell>
     );

@@ -3,7 +3,7 @@ import Radium from 'radium';
 import { Link } from 'react-router';
 import {
   Grid, Cell,
-    Layout, Header, Navigation, Content
+  Layout, Header, Navigation, Content
 } from 'react-mdl';
 
 import { GeneticThemeDemo } from '/lib/GeneticThemeDemo';
@@ -20,6 +20,7 @@ export class App extends React.Component {
     this.state = {
       content: [],
       chats: [],
+      selectedStyles: [defaultStyles.businesscard],
       theme: {
         businessCard: {
           card: {
@@ -40,61 +41,6 @@ export class App extends React.Component {
 
   componentDidMount() {
     this.setState({content: [
-      <ChatBot style={defaultStyles.chatbot} chats={this.getChats()} styles={{chat: {maxWidth: 214}}} />
-      ,
-      <div>
-        <h4 style={{textAlign: 'left'}}>
-          No man is an island.
-        </h4>
-        <Grid>
-          <Cell col={6} phone={12}>
-            Austin New
-          </Cell>
-          <Cell col={6} phone={12}>
-            David Prae
-          </Cell>
-          <Cell col={6} phone={12}>
-            Kristin Ottofy
-          </Cell>
-        </Grid>
-      </div>
-      ,
-      <Cell offset={4} col={4} phone={12}>
-        The future is starting, and we're here to help.
-        The websites of the future:
-        will mold themselves to a user.
-        will change as their users change.
-        will interact with their users.
-        will understand their users.
-      </Cell>
-      ,
-      <div>
-        <Grid>
-          <Cell col={6} phone={12}>
-            <h2>
-              <img src="/cute-closeup.jpg" style={[
-                defaultStyles.image, defaultStyles.largeImage]} />
-            </h2>
-          </Cell>
-          <Cell col={6} phone={12}>
-            <div style={[defaultStyles.businessCard]}>
-              <h2 style={defaultStyles.title}>
-                Paul Prae
-              </h2>
-              <h3>
-                Software Engineer, Data Scientist
-              </h3>
-              <p>
-                I’m a solutions architect who creates collaborative web technology to improve business and society. I build interactive systems that augment cognitive abilities and scale impact.
-              </p>
-            </div>
-          </Cell>
-        </Grid>
-      </div>
-      ,
-      <BusinessCard style={defaultStyles.businesscard} styles={this.state.theme.businessCard} />
-      ,
-      <GeneticThemeDemo />
     ]});
   }
 
@@ -127,10 +73,64 @@ export class App extends React.Component {
         </Header>
         <Content>
           <Tiles>
-            {this.state.content}
-          </Tiles>
-        </Content>
-      </Layout>
+            <Cell offset={4} col={4} phone={12}>
+              The future is starting, and we're here to help.
+              The websites of the future:
+              will mold themselves to a user.
+              will change as their users change.
+              will interact with their users.
+              will understand their users.
+            </Cell>
+            <div>
+              <h4 style={{textAlign: 'left'}}>
+                No man is an island.
+              </h4>
+              <Grid>
+                <Cell col={6} phone={12}>
+                  Austin New
+                </Cell>
+                <Cell col={6} phone={12}>
+                  David Prae
+                </Cell>
+                <Cell col={6} phone={12}>
+                  Kristin Ottofy
+                </Cell>
+              </Grid>
+            </div>
+            <div>
+              <Grid>
+                <Cell col={6} phone={12}>
+                  <h2>
+                    <img src="/cute-closeup.jpg" style={[
+                      defaultStyles.image, defaultStyles.largeImage]} />
+                  </h2>
+                </Cell>
+                <Cell col={6} phone={12}>
+                  <div style={[defaultStyles.businessCard]}>
+                    <h2 style={defaultStyles.title}>
+                      Paul Prae
+                    </h2>
+                    <h3>
+                      Software Engineer, Data Scientist
+                    </h3>
+                    <p>
+                      I’m a solutions architect who creates collaborative web technology to improve business and society. I build interactive systems that augment cognitive abilities and scale impact.
+                    </p>
+                  </div>
+                </Cell>
+              </Grid>
+            </div>
+            <div>
+              {this.state.selectedStyles.map((styles, i) =>
+                <BusinessCard key={i} style={defaultStyles.businesscard} styles={styles} />
+              )}
+            </div>
+            <GeneticThemeDemo onChoice={({traits: {style}}) => {
+              this.setState({selectedStyles: this.state.selectedStyles.concat(style)});
+            }} />
+        </Tiles>
+      </Content>
+    </Layout>
     );
   }
 }
@@ -156,7 +156,12 @@ let defaultStyles = {
     height: "100%"
   },
   businesscard: {
-    marginTop: 60
+    display: 'inline-block',
+    margin: 6,
+    transform: 'scale(0.4)',
+    transformOrigin: 'top left',
+    width: 130,
+    height: 180
   },
   chatbot: {
     margin: 12
