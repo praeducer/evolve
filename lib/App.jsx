@@ -1,9 +1,12 @@
 import React from 'react';
 import Radium from 'radium';
+import Icon from 'react-simple-icons';
 import { Link } from 'react-router';
 import {
   Grid, Cell,
-  Layout, Header, Navigation, Content
+  Layout, Header, Navigation, Content,
+  Button, IconButton,
+  Tooltip
 } from 'react-mdl';
 
 import { GeneticThemeDemo } from '/lib/GeneticThemeDemo';
@@ -60,75 +63,83 @@ export class App extends React.Component {
   }
   renderNavigation({title="Link", location=""}) {
     return(
-      <a key={title} href={location}>title</a>
+      <a key={title} href={location}>{title}</a>
+    );
+  }
+  renderIntroduction() {
+    return (
+      <div style={[defaultStyles.introduction]}>
+        <div style={{position: 'absolute', width: '100%', top: '50%', marginTop: -173}}>
+          <h6>
+            Software &amp; Data Science
+          </h6>
+          <h1 style={[defaultStyles.title, {padding: 16}]}>
+            Paul Prae
+          </h1>
+          <div>
+            <Button raised colored>
+              Evolve
+            </Button>
+          </div>
+        </div>
+        <p style={{position: 'absolute', bottom:'8%', width: '100%'}}>
+          <img src="/cute-closeup.jpg" style={[defaultStyles.image, {height: 24, padding: 8}]} />
+          <Icon style={{padding: 8}} name="github" fill="black" size={24} />
+          <Icon style={{padding: 8}} name="twitter" fill="black" size={24} />
+          <Icon style={{padding: 8}} name="linkedin" fill="black" size={24} />
+          <Icon style={{padding: 8}} name="instagram" fill="black" size={24} />
+        </p>
+      </div>
     );
   }
   render() {
     return(
       <Layout style={defaultStyles.container}>
-        <Header title="Paul Prae" style={defaultStyles.header}>
-          <Navigation>
-            {this.props.sections.map(this.renderNavigation, this)}
-          </Navigation>
-        </Header>
-        <Content>
-          <Tiles>
-            <Cell offset={4} col={4} phone={12}>
-              The future is starting, and we're here to help.
-              The websites of the future:
-              will mold themselves to a user.
-              will change as their users change.
-              will interact with their users.
-              will understand their users.
-            </Cell>
-            <div>
-              <h4 style={{textAlign: 'left'}}>
-                No man is an island.
-              </h4>
-              <Grid>
-                <Cell col={6} phone={12}>
-                  Austin New
-                </Cell>
-                <Cell col={6} phone={12}>
-                  David Prae
-                </Cell>
-                <Cell col={6} phone={12}>
-                  Kristin Ottofy
-                </Cell>
-              </Grid>
-            </div>
-            <div>
-              <Grid>
-                <Cell col={6} phone={12}>
-                  <h2>
-                    <img src="/cute-closeup.jpg" style={[
-                      defaultStyles.image, defaultStyles.largeImage]} />
-                  </h2>
-                </Cell>
-                <Cell col={6} phone={12}>
-                  <div style={[defaultStyles.businessCard]}>
-                    <h2 style={defaultStyles.title}>
-                      Paul Prae
-                    </h2>
-                    <h3>
-                      Software Engineer, Data Scientist
-                    </h3>
-                    <p>
-                      I’m a solutions architect who creates collaborative web technology to improve business and society. I build interactive systems that augment cognitive abilities and scale impact.
-                    </p>
-                  </div>
-                </Cell>
-              </Grid>
-            </div>
-            <div>
+        <Content style={defaultStyles.container}>
+          <div style={{height: '100%', textAlign: 'center'}}>
+            {this.renderIntroduction()}
+          </div>
+          <p>
+            I’m a solutions architect who creates collaborative web technology to improve business and society.
+            I build interactive systems that augment cognitive abilities and scale impact.
+          </p>
+          <div>
+            The future is starting, and we're here to help.
+            The interfaces of the future:
+            will mold themselves to a user.
+            will change as their users change.
+            will interact with their users.
+            will understand their users.
+          </div>
+          <div>
+            <h4 style={{textAlign: 'left'}}>
+              No man is an island.
+            </h4>
+            <p>
+              Austin New
+            </p>
+            <p>
+              David Prae
+            </p>
+            <p>
+              Kristin Ottofy
+            </p>
+          </div>
+          <div style={{height: 192, width: '100%', overflowX: 'auto', overflowY: 'hidden'}}>
+            <div ref={(ref) => {console.log(ref)}} style={{width: 180 * 9/10 * 8/9 * this.state.selectedStyles.length}}>
               {this.state.selectedStyles.map((styles, i) =>
-                <BusinessCard key={i} style={defaultStyles.businesscard} styles={styles} />
+                <BusinessCard key={i} onClick={() => {
+                  console.log(this.state.theme);
+                  this.setState({theme: styles});
+                }} style={defaultStyles.businesscard} styles={styles} />
               )}
             </div>
+          </div>
+          <div>
             <GeneticThemeDemo onChoice={({traits: {style}}) => {
               this.setState({selectedStyles: this.state.selectedStyles.concat(style)});
             }} />
-        </Tiles>
+        </div>
       </Content>
     </Layout>
     );
@@ -146,6 +157,7 @@ App.defaultProps = {
 
 let defaultStyles = {
   container: {
+    height: "100%",
     width: "100%",
     margin: 'auto'
   },
@@ -167,13 +179,16 @@ let defaultStyles = {
     margin: 12
   },
   image: {
+    height: 40,
     borderRadius: '50%'
   },
   largeImage: {
     maxHeight: 200,
     width: 'auto'
   },
-  businessCard: {
-    textAlign: 'left'
+  introduction: {
+    height: 'inherit',
+    backgroundColor: 'rgb(231, 233, 232)',
+    textAlign: 'center'
   }
 };

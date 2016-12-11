@@ -3,6 +3,17 @@ import Radium from 'radium';
 import { Badge } from 'react-mdl';
 
 @Radium
+export class ChatDiagram extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      chats: [],
+      showALl: false
+    }
+  }
+}
+
+@Radium
 export class ChatBot extends React.Component {
   constructor() {
     super();

@@ -5,7 +5,9 @@
     "start": "meteor run"
   },
   "babel": {
-    "plugins": ["babel-plugin-transform-decorators-legacy"]
+    "plugins": [
+      "babel-plugin-transform-decorators-legacy"
+    ]
   },
   "dependencies": {
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
@@ -22,7 +24,9 @@
     "react-motion": "^0.4.5",
     "react-redux": "^4.4.5",
     "react-router": "^2.8.1",
-    "redux": "^3.6.0"
+    "react-simple-icons": "^1.0.0-beta.5",
+    "redux": "^3.6.0",
+    "snapsvg": "^0.4.0"
   },
   "devDependencies": {
     "babel": "^6.5.2",

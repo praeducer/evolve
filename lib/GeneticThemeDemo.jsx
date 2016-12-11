@@ -1,7 +1,10 @@
 import React from 'react';
 import Radium from 'radium';
 import Color from 'color';
-import { Grid, Cell } from 'react-mdl';
+import {
+  Grid, Cell,
+  Tooltip
+} from 'react-mdl';
 import { BusinessCard } from '/lib/Card.jsx';
 import { ChatBot } from '/lib/ChatBot.jsx';
 import { Individual, Population, Genome } from '/imports/genetic-experience-management/src';
@@ -83,7 +86,9 @@ export class GeneticThemeDemo extends React.Component {
   renderStyledElement(style, index) {
     return(
       <Cell key={index} col={3} onClick={() => this.onChoice(index)}>
-        <BusinessCard style={style.container} styles={style} />
+        <Tooltip label="Choose this one.">
+          <BusinessCard style={style.container} styles={style} />
+        </Tooltip>
       </Cell>
     );
   }

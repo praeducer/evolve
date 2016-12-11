@@ -12,7 +12,7 @@ export class Tiles extends React.Component {
   }
   renderChildren(child, i) {
     return (
-      <div key={i} style={[defaultStyles.tile, this.props.style, this.getColor(i)]}>
+      <div key={i} style={[defaultStyles.tile, this.getColor(i)]}>
         {child}
       </div>
     );
@@ -27,6 +27,7 @@ export class Tiles extends React.Component {
 }
 let defaultStyles = {
   tile: {
+    height: 'inherit',
     minHeight: 250,
     width: '100%',
   }

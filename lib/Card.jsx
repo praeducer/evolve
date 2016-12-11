@@ -6,8 +6,9 @@ import { Grid, Cell } from 'react-mdl';
 @Radium
 export class BusinessCard extends React.Component {
   render() {
+    let {style, styles, ...restProps} = this.props;
     return(
-      <div style={[this.props.style]}>
+      <div style={[this.props.style]} {...restProps}>
         <Card shadow={1} style={this.props.styles.card}>
           <CardTitle>
             <h2 style={this.props.styles.title}>
