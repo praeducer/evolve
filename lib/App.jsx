@@ -1,4 +1,5 @@
 import React from 'react';
+import { Motion, spring } from 'react-motion';
 import Radium from 'radium';
 import Icon from 'react-simple-icons';
 import { Link } from 'react-router';
@@ -23,6 +24,7 @@ export class App extends React.Component {
     this.state = {
       content: [],
       chats: [],
+      evolve: false,
       selectedStyles: [defaultStyles.businesscard],
       theme: {
         businessCard: {
@@ -61,14 +63,16 @@ export class App extends React.Component {
       {message: (<a href="http://paulprae.com">More about Paul.</a>)},
     ];
   }
+
   renderNavigation({title="Link", location=""}) {
     return(
       <a key={title} href={location}>{title}</a>
     );
   }
-  renderIntroduction() {
+
+  renderIntroduction({height}) {
     return (
-      <div style={[defaultStyles.introduction]}>
+      <div style={[defaultStyles.introduction, {height: height+"%"}]}>
         <div style={{position: 'absolute', width: '100%', top: '50%', marginTop: -173}}>
           <h6>
             Software &amp; Data Science
@@ -77,7 +81,7 @@ export class App extends React.Component {
             Paul Prae
           </h1>
           <div>
-            <Button raised colored>
+            <Button raised colored onClick={() => {this.setState({evolve: true})}}>
               Evolve
             </Button>
           </div>
@@ -92,12 +96,15 @@ export class App extends React.Component {
       </div>
     );
   }
+
   render() {
     return(
       <Layout style={defaultStyles.container}>
         <Content style={defaultStyles.container}>
           <div style={{height: '100%', textAlign: 'center'}}>
-            {this.renderIntroduction()}
+            <Motion defaulStyle={{height: this.state.demo?12: 100}} style={{height: spring(4)}}>
+              {this.renderIntroduction}
+            </Motion>
           </div>
           <p>
             I’m a solutions architect who creates collaborative web technology to improve business and society.
