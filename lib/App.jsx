@@ -70,29 +70,65 @@ export class App extends React.Component {
     );
   }
 
-  renderIntroduction({height}) {
+  renderIntroduction({percent}) {
+    // Get the window width
+    let p = percent / 100;
+    let transformations = {
+      introduction: {
+        transform: `scale(${p * 0.4 + 0.6})`,
+        transformOrigin: 'top left 20px 20px',
+        height: p * (window.document.body.clientHeight - 300) + 300, // 300
+        width: p * (window.document.body.clientWidth - 486) + 486, // 486
+      },
+      button: {
+        opacity: percent * 0.01,
+        // display: (percent)? 'block': 'none'
+      },
+      title: {
+        marginTop: -73 * p - 100,
+        width: `${percent * 0.5 + 50}%`
+      },
+      icons: {
+        width: `${percent * 0.5 + 50}%`,
+        left: `${50 - percent * 0.5}%`,
+        bottom: `${(50 - percent * 0.5) + 8}%`
+      },
+      contact: {
+        opacity: 1 - percent / 100,
+        display: (90 - percent)? 'block': 'none'
+      }
+    };
+    let icon = {
+      fill: 'black',
+      size: 24
+    }
     return (
-      <div style={[defaultStyles.introduction, {height: height+"%"}]}>
-        <div style={{position: 'absolute', width: '100%', top: '50%', marginTop: -173}}>
+      <div style={[defaultStyles.introduction, transformations.introduction]}>
+        <div style={[{position: 'absolute', top: '50%', marginTop: -173}, transformations.title]}>
           <h6>
             Software &amp; Data Science
           </h6>
           <h1 style={[defaultStyles.title, {padding: 16}]}>
             Paul Prae
           </h1>
-          <div>
-            <Button raised colored onClick={() => {this.setState({evolve: true})}}>
+          <div style={transformations.button}>
+            <Button raised colored onClick={() => {this.setState({evolve: !this.state.evolve})}}>
               Evolve
             </Button>
           </div>
         </div>
-        <p style={{position: 'absolute', bottom:'8%', width: '100%'}}>
+        <div style={[{position: 'absolute', bottom:'8%', width: '100%'}, transformations.icons]}>
           <img src="/cute-closeup.jpg" style={[defaultStyles.image, {height: 24, padding: 8}]} />
-          <Icon style={{padding: 8}} name="github" fill="black" size={24} />
-          <Icon style={{padding: 8}} name="twitter" fill="black" size={24} />
-          <Icon style={{padding: 8}} name="linkedin" fill="black" size={24} />
-          <Icon style={{padding: 8}} name="instagram" fill="black" size={24} />
-        </p>
+          <Icon style={{padding: 8}} fill={icon.fill} size={icon.size} name="github" />
+          <Icon style={{padding: 8}} fill={icon.fill} size={icon.size} name="twitter" />
+          <Icon style={{padding: 8}} fill={icon.fill} size={icon.size} name="linkedin" />
+          <Icon style={{padding: 8}} fill={icon.fill} size={icon.size} name="instagram" />
+          <div style={transformations.contact}>
+            <div>
+              Phone: (555) 213-2134
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -102,8 +138,8 @@ export class App extends React.Component {
       <Layout style={defaultStyles.container}>
         <Content style={defaultStyles.container}>
           <div style={{height: '100%', textAlign: 'center'}}>
-            <Motion defaulStyle={{height: this.state.demo?12: 100}} style={{height: spring(4)}}>
-              {this.renderIntroduction}
+            <Motion defaulStyle={{percent: 100}} style={{percent: spring((this.state.evolve)? 0: 100)}}>
+              {this.renderIntroduction.bind(this)}
             </Motion>
           </div>
           <p>
@@ -163,6 +199,9 @@ App.defaultProps = {
 
 
 let defaultStyles = {
+  title: {
+    fontSize: 48,
+  },
   container: {
     height: "100%",
     width: "100%",
