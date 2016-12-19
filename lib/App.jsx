@@ -75,14 +75,12 @@ export class App extends React.Component {
     let p = percent / 100;
     let transformations = {
       introduction: {
-        transform: `scale(${p * 0.4 + 0.6})`,
-        transformOrigin: 'top left 20px 20px',
         height: p * (window.document.body.clientHeight - 300) + 300, // 300
         width: p * (window.document.body.clientWidth - 486) + 486, // 486
       },
       button: {
         opacity: percent * 0.01,
-        // display: (percent)? 'block': 'none'
+        display: (percent)? 'block': 'none'
       },
       title: {
         marginTop: -73 * p - 100,
@@ -91,7 +89,7 @@ export class App extends React.Component {
       icons: {
         width: `${percent * 0.5 + 50}%`,
         left: `${50 - percent * 0.5}%`,
-        bottom: `${(50 - percent * 0.5) + 8}%`
+        bottom: `${(10 - percent * 0.10) + 8}%`,
       },
       contact: {
         opacity: 1 - percent / 100,
@@ -103,7 +101,9 @@ export class App extends React.Component {
       size: 24
     }
     return (
-      <div style={[defaultStyles.introduction, transformations.introduction]}>
+      <div style={[defaultStyles.introduction, transformations.introduction]} onClick={
+        () => {if(this.state.evolve){this.setState({evolve: false})}}
+      }>
         <div style={[{position: 'absolute', top: '50%', marginTop: -173}, transformations.title]}>
           <h6>
             Software &amp; Data Science
@@ -112,7 +112,7 @@ export class App extends React.Component {
             Paul Prae
           </h1>
           <div style={transformations.button}>
-            <Button raised colored onClick={() => {this.setState({evolve: !this.state.evolve})}}>
+            <Button raised colored onClick={() => {this.setState({evolve: true})}}>
               Evolve
             </Button>
           </div>
@@ -124,8 +124,14 @@ export class App extends React.Component {
           <Icon style={{padding: 8}} fill={icon.fill} size={icon.size} name="linkedin" />
           <Icon style={{padding: 8}} fill={icon.fill} size={icon.size} name="instagram" />
           <div style={transformations.contact}>
+            <hr />
             <div>
               Phone: (555) 213-2134
+            </div>
+            <hr />
+            <div>
+              I’m a solutions architect who creates collaborative web technology to improve business and society.
+              I build interactive systems that augment cognitive abilities and scale impact.
             </div>
           </div>
         </div>
@@ -233,6 +239,7 @@ let defaultStyles = {
     width: 'auto'
   },
   introduction: {
+    position: 'relative',
     height: 'inherit',
     backgroundColor: 'rgb(231, 233, 232)',
     textAlign: 'center'
