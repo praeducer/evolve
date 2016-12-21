@@ -1,1 +1,13 @@
 /* CSS declarations go here */
+span.gc-cs-link {
+  color: inherit;
+  text-decoration: none;
+}
+hr {
+  border-color: inherit;
+}
+body {
+  background-image: url('space.jpeg');
+  background-position: center;
+  background-size: cover;
+}

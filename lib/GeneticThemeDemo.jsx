@@ -1,4 +1,5 @@
 import React from 'react';
+import { Motion, spring } from 'react-motion';
 import Radium from 'radium';
 import Color from 'color';
 import {
@@ -28,14 +29,13 @@ export class GeneticThemeDemo extends React.Component {
             crossover: 0.5,
             modify: true
           },
-          style: {
+          styles: {
             container: {
             },
             title: {
               color: this.decodeColor(2),
               fontWeight: [500, 700],
               fontFamily: Fonts,
-              fontSize: ['x-large', 'xx-large']
             },
             text: {
               color: this.decodeColor(1),
@@ -43,7 +43,6 @@ export class GeneticThemeDemo extends React.Component {
               fontFamily: Fonts,
             },
             card: {
-              cursor: 'pointer',
               backgroundColor: this.decodeColor(0),
             }
           }
@@ -83,13 +82,17 @@ export class GeneticThemeDemo extends React.Component {
       }).rgbString()
     });
   }
-  renderStyledElement(style, index) {
+  renderStyledElement(styles, index) {
     return(
-      <Cell key={index} col={3} onClick={() => this.onChoice(index)}>
-        <Tooltip label="Choose this one.">
-          <BusinessCard style={style.container} styles={style} />
-        </Tooltip>
-      </Cell>
+      <Motion key={index} defaultStyle={{scale: 0}} style={{scale: spring(1)}}>
+        {({scale}) =>
+          <Cell style={{transform: `scale(${scale})`}} col={3} onClick={() => this.onChoice(index)}>
+            <Tooltip label="Choose this one.">
+              <BusinessCard style={styles.container} styles={styles} />
+            </Tooltip>
+          </Cell>
+        }
+      </Motion>
     );
   }
   getNarration() {
@@ -101,12 +104,12 @@ export class GeneticThemeDemo extends React.Component {
     ];
   }
   render() {
-    var styles = this.state.population.individuals.map((i) => i.traits.style);
-    var children = styles.map(this.renderStyledElement, this);
+    var individualsStyles = this.state.population.individuals.map((i) => i.traits.styles);
+    var children = individualsStyles.map(this.renderStyledElement, this);
     return(
       <div>
         <Grid>
-          {children}
+        {children}
         </Grid>
       </div>
     );
