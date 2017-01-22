@@ -11,9 +11,10 @@ import {
 } from 'react-mdl';
 
 import { GeneticThemeDemo } from '/lib/GeneticThemeDemo';
-import { BusinessCard } from '/lib/Card.jsx';
-import { ChatBot } from '/lib/ChatBot.jsx';
+import { BusinessCard } from '/lib/Card';
+import { ChatBot } from '/lib/ChatBot';
 import { Tiles } from '/lib/Tiles';
+import { Node, Edge } from '/lib/Node';
 
 @Radium
 export class App extends React.Component {
@@ -33,6 +34,10 @@ export class App extends React.Component {
   componentDidMount() {
     this.setState({content: [
     ]});
+    window.onresize = () => this.forceUpdate()
+  }
+  componentWillUnmount() {
+    delete window.onresize;
   }
 
   getChats() {
@@ -175,6 +180,15 @@ export class App extends React.Component {
                 : undefined
             }
           </div>
+          <Node>
+            <Edge>
+              <Node>
+                <span>
+                  Hello!
+                </span>
+              </Node>
+            </Edge>
+          </Node>
           <div style={{display: 'none'}}>
             <p>
               I’m a solutions architect who creates collaborative web technology to improve business and society.
