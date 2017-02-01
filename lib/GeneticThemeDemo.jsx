@@ -20,7 +20,7 @@ export class GeneticThemeDemo extends React.Component {
         size: 12,
         phenotype: {
           mutate: {
-            substitution: 0.03,
+            substitution: 0.08,
             inversion: 0.00,
             upper: 40,
             lower: 40
