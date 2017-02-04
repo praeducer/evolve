@@ -20,8 +20,9 @@ export class GeneticThemeDemo extends React.Component {
         size: 12,
         phenotype: {
           mutate: {
-            substitution: 0.03,
-            inversion: 0.00,
+            substitution: [1/100, 1/40, 1/20],
+            incrementation: [1/5, 1/2, 1],
+            increment: [1/Fonts.length, 1/15, 1/10, 1/5, 1/2],
             upper: 40,
             lower: 40
           },
@@ -70,11 +71,12 @@ export class GeneticThemeDemo extends React.Component {
   decodeColor(o) {
     let sum = (sum, value) => sum + value;
     return ((genome, start) => {
-      let ostart = start + 3 + o * 9;
-      let hue = 360 * (genome.slice(start, 3).reduce(sum, 0) % 1);
-      let saturation = 100 * (genome.slice(ostart, ostart + 3).reduce(sum, 0) % 1);
-      let lightness = 100 * (genome.slice(ostart + 3, ostart + 6).reduce(sum, 0) % 1);
-      let offhue = 360 * (genome.slice(ostart + 6, ostart + 9).reduce(sum, 0) % 1);
+      let colorLength = 1
+      let ostart = start + colorLength + o * colorLength * 3;
+      let hue = 360 * (genome.slice(start, colorLength).reduce(sum, 0) % 1);
+      let saturation = 100 * (genome.slice(ostart, ostart + colorLength).reduce(sum, 0) % 1);
+      let lightness = 100 * (genome.slice(ostart + colorLength, ostart + colorLength * 2).reduce(sum, 0) % 1);
+      let offhue = 360 * (genome.slice(ostart + colorLength * 2, ostart + colorLength * 3).reduce(sum, 0) % 1);
       return Color({
         h: (hue + offhue) % 360,
         s: saturation,
@@ -84,15 +86,7 @@ export class GeneticThemeDemo extends React.Component {
   }
   renderStyledElement(styles, index) {
     return(
-      <Motion key={index} defaultStyle={{scale: 0}} style={{scale: spring(1)}}>
-        {({scale}) =>
-          <Cell style={{transform: `scale(${scale})`}} col={3} onClick={() => this.onChoice(index)}>
-            <Tooltip label="Choose this one.">
-              <BusinessCard style={styles.container} styles={styles} />
-            </Tooltip>
-          </Cell>
-        }
-      </Motion>
+      <BusinessCard style={styles.container} styles={styles} onClick={() => this.onChoice(index)}/>
     );
   }
   getNarration() {
@@ -108,9 +102,7 @@ export class GeneticThemeDemo extends React.Component {
     var children = individualsStyles.map(this.renderStyledElement, this);
     return(
       <div>
-        <Grid>
         {children}
-        </Grid>
       </div>
     );
   }
