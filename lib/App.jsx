@@ -13,8 +13,7 @@ import {
 import { GeneticThemeDemo } from '/lib/GeneticThemeDemo';
 import { BusinessCard } from '/lib/Card';
 import { ChatBot } from '/lib/ChatBot';
-import { Tiles } from '/lib/Tiles';
-import { Node, Edge } from '/lib/Node';
+import { defaultStyles } from '/lib/defaultStyles';
 
 @Radium
 export class App extends React.Component {
@@ -117,9 +116,7 @@ export class App extends React.Component {
       <div style={[{position: 'absolute', bottom:'8%', width: '100%'}, styles.text, transformations.icons]}>
         <div style={[transformations.contact]}>
           <div>
-            Phone: <span>(555) 213-2134</span>
           </div>
-          <hr style={{borderColor: 'inherit'}} />
           <div style={{maxWidth: 240}}>
             I’m a solutions architect who creates collaborative web technology to improve business and society.
             I build interactive systems that augment cognitive abilities and scale impact.
@@ -180,43 +177,6 @@ export class App extends React.Component {
                 : undefined
             }
           </div>
-          <Node>
-            <Edge>
-              <Node>
-                <span>
-                  Hello!
-                </span>
-              </Node>
-            </Edge>
-          </Node>
-          <div style={{display: 'none'}}>
-            <p>
-              I’m a solutions architect who creates collaborative web technology to improve business and society.
-              I build interactive systems that augment cognitive abilities and scale impact.
-            </p>
-            <div>
-              The future is starting, and we're here to help.
-              The interfaces of the future:
-              will mold themselves to a user.
-              will change as their users change.
-              will interact with their users.
-              will understand their users.
-            </div>
-            <div>
-              <h4 style={{textAlign: 'left'}}>
-                No man is an island.
-              </h4>
-              <p>
-                Austin New
-              </p>
-              <p>
-                David Prae
-              </p>
-              <p>
-                Kristin Ottofy
-              </p>
-            </div>
-          </div>
         </Content>
       </Layout>
     );
@@ -232,50 +192,3 @@ App.defaultProps = {
   ]
 };
 
-let defaultStyles = {
-  title: {
-    fontSize: 48,
-    color: "black",
-    fontWeight: 500
-  },
-  container: {
-    height: "100%",
-    width: "100%",
-    margin: 'auto'
-  },
-  header: {
-    background: "rgba(0, 0, 0, 0.8)"
-  },
-  content: {
-    height: "100%"
-  },
-  chatbot: {
-    margin: 12
-  },
-  image: {
-    height: 40,
-    borderRadius: '50%'
-  },
-  largeImage: {
-    maxHeight: 200,
-    width: 'auto'
-  },
-  businessCard: {
-    height: 300,
-    width: 496
-  },
-  introduction: {
-    position: 'relative',
-    height: 'inherit',
-    backgroundColor: 'rgb(231, 233, 232)',
-    textAlign: 'center',
-    display: 'inline-block'
-  },
-  card: {
-    backgroundColor: "white"
-  },
-  text: {
-    color: "black",
-    fontWeight: 500
-  },
-};
