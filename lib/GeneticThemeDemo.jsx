@@ -20,15 +20,34 @@ export class GeneticThemeDemo extends React.Component {
         size: 12,
         phenotype: {
           mutate: {
-            substitution: [1/100, 1/40, 1/20],
+            //substitution: [1/100, 1/40, 1/20],
             incrementation: [1/5, 1/2, 1],
-            increment: [1/Fonts.length, 1/15, 1/10, 1/5, 1/2],
+            increment: [1/Fonts.length, 1/10],
             upper: 40,
             lower: 40
           },
           crossover: {
             crossover: 0.5,
             modify: true
+          },
+          titles: {
+            primary: [
+              "Software",
+              "Engineering",
+              "Marketing",
+              "Applications",
+              "Learning",
+              "Solutions"
+            ],
+            secondary: [
+              "Data Science",
+              "Data Processing",
+              "Data Collection",
+              "Artificial Intelligence",
+              "Cognitive Computing",
+              "Chat Bots",
+              "Cloud Services"
+            ]
           },
           styles: {
             container: {
@@ -84,9 +103,16 @@ export class GeneticThemeDemo extends React.Component {
       }).rgbString()
     });
   }
-  renderStyledElement(styles, index) {
+  renderStyledElement(styles, {primary="", secondary=""}, index) {
+    return this.props.children(individual, index);
+    if (!primary) console.log(this.state.population.individuals[index]);
+    let title = primary + ((primary && secondary)? ' & ':'') + secondary;
     return(
-      <BusinessCard style={styles.container} styles={styles} onClick={() => this.onChoice(index)}/>
+      <BusinessCard
+        title={title}
+        style={styles.container}
+        styles={styles}
+        onClick={() => this.onChoice(index)}/>
     );
   }
   getNarration() {
@@ -99,7 +125,9 @@ export class GeneticThemeDemo extends React.Component {
   }
   render() {
     var individualsStyles = this.state.population.individuals.map((i) => i.traits.styles);
-    var children = individualsStyles.map(this.renderStyledElement, this);
+    var children = this.state.population.individuals.map(this.props.children).map((child, index) => React.cloneElement(child, {
+      onClick: () => this.onChoice(index)
+    }));
     return(
       <div>
         {children}
@@ -112,12 +140,3 @@ GeneticThemeDemo.propTypes = {
 };
 GeneticThemeDemo.defaultProps = {
 };
-let defaultStyles = {
-  chatbot: {
-    position: 'fixed',
-    top: 12,
-    left: 12,
-    zIndex: 2
-  }
-}
-
