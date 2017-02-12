@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import React from 'react';
 import { Motion, spring } from 'react-motion';
 import Radium from 'radium';
@@ -26,6 +27,7 @@ export class App extends React.Component {
       chats: [],
       evolve: false,
       selectedStyles: [defaultStyles],
+      selectedStyle: 0,
       styles: defaultStyles
     };
   }
@@ -53,46 +55,47 @@ export class App extends React.Component {
       {message: (<a href="http://paulprae.com">More about Paul.</a>)},
     ];
   }
-
   renderNavigation({title="Link", location=""}) {
     return(
       <a key={title} href={location}>{title}</a>
     );
   }
-
-  renderIntroduction(styles, i) {
-    // Get the window width
-    /*let styles = this.state.selectedStyles[index];
-    let p = percent / 100;
-    let transformations = {
-      introduction: {
-        marginTop: Math.floor((1 - scale) * height / 2 * -1),
-        marginBottom: Math.floor((1 - scale) * height / 2 * -1),
-        marginLeft: Math.floor((1 - scale) * width / 2 * -1),
-        marginRight: Math.floor((1 - scale) * width / 2 * -1),
-        transform: `scale(${scale})`
+  scaledBusinessCard() {
+    let scale = Math.min(window.document.body.clientWidth / (3 * defaultStyles.businessCard.width), window.document.body.clientHeight /(4 * defaultStyles.businessCard.height));
+    return {
+      businessCard: {
+        height: defaultStyles.businessCard.height * scale,
+        width: defaultStyles.businessCard.width * scale
       },
-      button: {
-        opacity: p,
-        display: (percent)? 'block': 'none'
+      cardTitle: {
+        fontSize: defaultStyles.cardTitle.fontSize * scale
       },
-      title: {
-        marginTop: -73 * p - 100,
-        width: `${percent * 0.5 + 50}%`
+      cardText: {
+        fontSize: defaultStyles.cardText.fontSize * scale
       },
-      icons: {
-        width: `${percent * 0.5 + 50}%`,
-        left: `${50 - percent * 0.5}%`,
-        bottom: `${(10 - percent * 0.10) + 8}%`,
-      },
-    };*/
+      titleContainer: {
+        marginBottom: (defaultStyles.cardTitle.fontSize * scale + defaultStyles.cardText.fontSize * scale + 40) / 2 * -1
+      }
+    };
+  }
+  renderIntroduction(styles, index) {
     return (
-      <BusinessCard key={i}
-        styles={Object.assign({}, defaultStyles, styles)}
-        isFullscreen={!this.state.evolve}
+      <BusinessCard key={index}
+        styles={_.merge({}, defaultStyles, styles, this.scaledBusinessCard())}
+        isFullscreen={(
+          !this.state.evolve &&
+          index === this.state.selectedStyle
+        )}
+        isHidden={(
+          !this.state.evolve &&
+          index !== this.state.selectedStyle
+        )}
         hasButton={!this.state.evolve}
         hasLinks={!this.state.evolve}
-        onClick={() => this.setState({evolve: true})}
+        onClick={() => this.setState({
+          evolve: !this.state.evolve,
+          selectedStyle: index
+        })}
         title={"Software & Data Science"}
         name={"Paul Prae"}
         buttonText={"Evolve"}
@@ -114,33 +117,20 @@ export class App extends React.Component {
                 }
               }}>
               <div style={{
-                width: this.state.evolve? Math.floor(defaultStyles.businessCard.width * pageScale) * this.state.selectedStyles.length: '100%'
+                width: this.state.evolve? Math.ceil(defaultStyles.businessCard.width * pageScale) * this.state.selectedStyles.length: '100%'
               }}>
                 {this.state.selectedStyles.map((styles, index) =>
-                  /*<Motion key={index}
-                    defaultStyle={{
-                      percent: (index==0)? 100: 0,
-                      scale: (!this.state.evolve)? 1: pageScale,
-                      index: index,
-                      height: (index==0)? window.document.body.clientHeight: defaultStyles.businessCard.height,
-                      width: (index==0)? window.document.body.clientWidth: defaultStyles.businessCard.width,
-                    }}
-                    style={{
-                      percent: spring((this.state.evolve)? 0: 100),
-                      scale: spring((this.state.evolve)? pageScale: 1),
-                      index: index,
-                      height: spring((this.state.evolve)? defaultStyles.businessCard.height: window.document.body.clientHeight),
-                      width: spring((this.state.evolve)? defaultStyles.businessCard.width: window.document.body.clientWidth),
-                  }}>
-                    {this.renderIntroduction.bind(this)}
-                  </Motion>*/
                   this.renderIntroduction(styles, index)
                 )}
               </div>
             </div>
             {(this.state.evolve) ?
-              <GeneticThemeDemo key="demo" onChoice={({traits: {styles}}) => {
-                this.setState({selectedStyles: this.state.selectedStyles.concat(styles)});
+              <GeneticThemeDemo
+                key="demo"
+                onChoice={({traits: {styles}}) => {
+                  this.setState({
+                    selectedStyles: this.state.selectedStyles.concat(styles)
+                    });
               }}>
               {({traits: {styles, titles: {primary, secondary}}}, index) => {
                 return (
@@ -148,7 +138,8 @@ export class App extends React.Component {
                     key={index}
                     title={`${primary} & ${secondary}`}
                     name="Paul Prae"
-                    styles={Object.assign({}, defaultStyles, styles)} />
+                    buttonText="Select"
+                    styles={_.merge({}, defaultStyles, styles, this.scaledBusinessCard())} />
                 );
               }}
               </GeneticThemeDemo>

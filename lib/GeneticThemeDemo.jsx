@@ -6,7 +6,6 @@ import {
   Grid, Cell,
   Tooltip
 } from 'react-mdl';
-import { BusinessCard } from '/lib/Card.jsx';
 import { ChatBot } from '/lib/ChatBot.jsx';
 import { Individual, Population, Genome } from '/imports/genetic-experience-management/src';
 
@@ -20,7 +19,6 @@ export class GeneticThemeDemo extends React.Component {
         size: 12,
         phenotype: {
           mutate: {
-            //substitution: [1/100, 1/40, 1/20],
             incrementation: [1/5, 1/2, 1],
             increment: [1/Fonts.length, 1/10],
             upper: 40,
@@ -50,8 +48,6 @@ export class GeneticThemeDemo extends React.Component {
             ]
           },
           styles: {
-            container: {
-            },
             title: {
               color: this.decodeColor(2),
               fontWeight: [500, 700],
@@ -102,18 +98,6 @@ export class GeneticThemeDemo extends React.Component {
         l: lightness
       }).rgbString()
     });
-  }
-  renderStyledElement(styles, {primary="", secondary=""}, index) {
-    return this.props.children(individual, index);
-    if (!primary) console.log(this.state.population.individuals[index]);
-    let title = primary + ((primary && secondary)? ' & ':'') + secondary;
-    return(
-      <BusinessCard
-        title={title}
-        style={styles.container}
-        styles={styles}
-        onClick={() => this.onChoice(index)}/>
-    );
   }
   getNarration() {
     return [
