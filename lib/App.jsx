@@ -90,8 +90,14 @@ export class App extends React.Component {
           !this.state.evolve &&
           index !== this.state.selectedStyle
         )}
-        hasButton={!this.state.evolve}
-        hasLinks={!this.state.evolve}
+        hasButton={(
+          !this.state.evolve &&
+          index === this.state.selectedStyle
+        )}
+        hasLinks={(
+          !this.state.evolve &&
+          index === this.state.selectedStyle
+        )}
         onClick={() => this.setState({
           evolve: !this.state.evolve,
           selectedStyle: index
@@ -109,20 +115,22 @@ export class App extends React.Component {
       <Layout style={defaultStyles.container}>
         <Content style={defaultStyles.container}>
           <div style={{height: '100%', textAlign: 'center'}}>
-            <div style={{width: '100%', overflowX: 'auto', overflowY: 'hidden', textAlign: 'left'}}
-              ref={(el) => {
+            <div ref={(el) => {
                 if(el) {
                   el.scrollLeft = this.state.selectedStyles.length *
                     Math.floor(defaultStyles.businessCard.width * pageScale);
                 }
-              }}>
-              <div style={{
-                width: this.state.evolve? Math.ceil(defaultStyles.businessCard.width * pageScale) * this.state.selectedStyles.length: '100%'
+              }}
+              style={{
+                position: 'relative',
+                height: (this.state.evolve)?defaultStyles.businessCard.height * pageScale:'100%',
+                whiteSpace: 'nowrap',
+                overflowX: 'auto',
+                overflowY: 'hidden'
               }}>
                 {this.state.selectedStyles.map((styles, index) =>
                   this.renderIntroduction(styles, index)
                 )}
-              </div>
             </div>
             {(this.state.evolve) ?
               <GeneticThemeDemo
