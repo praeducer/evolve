@@ -63,7 +63,7 @@ export class BusinessCard extends React.Component {
       icons: {
         opacity: p,
         display: (p>0.1)? 'block': 'none',
-        pointerEvents: (p>0.7)? undefined: 'none'
+        pointerEvents: (p>0.7)? 'all': 'none'
       }
     };
   }
@@ -83,9 +83,14 @@ export class BusinessCard extends React.Component {
       button: {
         opacity: p,
         display: (p>0.1)? 'block': 'none',
+        marginTop: Math.floor((1-p) * 36 / 2 * -1),
+        marginBottom: Math.floor((1-p) * 36 / 2 * -1),
       },
       titleContainerExt: {
-        
+        paddingBottom: p * 20
+      },
+      title: {
+        marginBottom: p * 20
       }
     };
   }
