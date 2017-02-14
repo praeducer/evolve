@@ -28,6 +28,7 @@ export class App extends React.Component {
       evolve: false,
       selectedStyles: [defaultStyles],
       selectedStyle: 0,
+      selectedTitles: [{primary: "Software", secondary: "Data Science"}],
       styles: defaultStyles
     };
   }
@@ -78,7 +79,7 @@ export class App extends React.Component {
       }
     };
   }
-  renderIntroduction(styles, index) {
+  renderIntroduction(styles, {primary, secondary}, index) {
     return (
       <BusinessCard key={index}
         styles={_.merge({}, defaultStyles, styles, this.scaledBusinessCard())}
@@ -102,7 +103,7 @@ export class App extends React.Component {
           evolve: !this.state.evolve,
           selectedStyle: index
         })}
-        title={"Software & Data Science"}
+        title={`${primary} & ${secondary}`}
         name={"Paul Prae"}
         buttonText={"Evolve"}
       />
@@ -129,15 +130,16 @@ export class App extends React.Component {
                 overflowY: 'hidden'
               }}>
                 {this.state.selectedStyles.map((styles, index) =>
-                  this.renderIntroduction(styles, index)
+                  this.renderIntroduction(styles, this.state.selectedTitles[index], index)
                 )}
             </div>
             {(this.state.evolve) ?
               <GeneticThemeDemo
                 key="demo"
-                onChoice={({traits: {styles}}) => {
+                onChoice={({traits: {styles, titles}}) => {
                   this.setState({
-                    selectedStyles: this.state.selectedStyles.concat(styles)
+                    selectedStyles: this.state.selectedStyles.concat(styles),
+                    selectedTitles: this.state.selectedTitles.concat(titles)
                     });
               }}>
               {({traits: {styles, titles: {primary, secondary}}}, index) => {
