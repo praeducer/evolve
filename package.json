@@ -15,7 +15,6 @@
     "color": "^0.11.3",
     "crypto": "0.0.3",
     "lodash": "^4.17.4",
-    "meteor-node-stubs": "~0.2.0",
     "moment": "^2.15.1",
     "radium": "^0.18.1",
     "react": "^15.3.2",
