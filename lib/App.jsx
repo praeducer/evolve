@@ -4,12 +4,7 @@ import { Motion, spring } from 'react-motion';
 import Radium from 'radium';
 import Icon from 'react-simple-icons';
 import { Link } from 'react-router';
-import {
-  Grid, Cell,
-  Layout, Header, Navigation, Content,
-  Button, IconButton,
-  Tooltip
-} from 'react-mdl';
+import { Layout, Header, Navigation, Content } from 'react-mdl';
 import Color from 'color';
 
 import { GeneticThemeDemo } from '/lib/GeneticThemeDemo';
@@ -65,12 +60,12 @@ export class App extends React.Component {
   // We want the cards to fill out page rows and columns.
   demoRows() {
     return Math.min(4,
-      Math.ceil(window.document.body.clientHeight / defaultStyles.businessCard.height + 1) + 1
+      Math.max(3, Math.ceil(window.document.body.clientHeight / defaultStyles.businessCard.height))
     );
   }
   demoColumns() {
     return Math.min(4,
-      Math.ceil(window.document.body.clientWidth / defaultStyles.businessCard.width) + 1
+      Math.max(2, Math.ceil(window.document.body.clientWidth / defaultStyles.businessCard.width))
     );
   }
   scaledBusinessCard(rows=this.demoRows(), columns=this.demoColumns()) {
@@ -161,7 +156,7 @@ export class App extends React.Component {
               <GeneticThemeDemo
                 key="demo"
                 population={Object.assign({}, this.props.population, {
-                  size: this.demoRows() * this.demoColumns()
+                  size: (this.demoRows() - 1) * this.demoColumns()
                 })}
                 onChoice={({traits: {styles, titles}}) => {
                   this.setState({

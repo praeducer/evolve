@@ -1,11 +1,6 @@
 import React from 'react';
 import { Motion, spring } from 'react-motion';
 import Radium from 'radium';
-import {
-  Grid, Cell,
-  Tooltip
-} from 'react-mdl';
-import { ChatBot } from '/lib/ChatBot.jsx';
 import { Individual, Population, Genome } from '/imports/genetic-experience-management/src';
 
 
