@@ -111,7 +111,7 @@ export class BusinessCard extends React.Component {
       <div style={[styles.businessCard, styles.card, {cursor: (!this.props.hasButton && this.props.onClick instanceof Function)? "pointer": undefined}]}
         onClick={(this.props.hasButton)?undefined: this.props.onClick}>
         <div style={[styles.titleContainer, styles.titleContainerExt]}>
-          <h6 style={[styles.cardText, styles.text]}>
+          <h6 style={[{whiteSpace: 'normal'}, styles.cardText, styles.text]}>
             {title}
           </h6>
           <h1 style={[styles.cardTitle, styles.title, {padding: 16}]}>
