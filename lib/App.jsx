@@ -41,6 +41,7 @@ export class App extends React.Component {
     this.setState({content: [
     ]});
     window.onresize = () => this.forceUpdate()
+    window.Color = Color;
   }
   componentWillUnmount() {
     delete window.onresize;
@@ -200,20 +201,25 @@ export class App extends React.Component {
   }
 }
 
-function decodeColor(o) {
-  let sum = (sum, value) => sum + value;
+function decodeColor(o, isBackground=false) {
+  // Base Hue, Lightness Style.
+  let sum = (sum, value) => {
+    return sum + value;
+  }
   return ((genome, start) => {
-    let colorLength = 1;
+    let colorLength = 2;
     let ostart = start + colorLength + o * colorLength * 3;
     let hue = 360 * (genome.slice(start, colorLength).reduce(sum, 0) % 1);
+    let lightness = 100 * (genome.slice(start + colorLength, start + colorLength * 2).reduce(sum, 0) % 1);
     let saturation = 100 * (genome.slice(ostart, ostart + colorLength).reduce(sum, 0) % 1);
-    let lightness = 100 * (genome.slice(ostart + colorLength, ostart + colorLength * 2).reduce(sum, 0) % 1);
     let offhue = 360 * (genome.slice(ostart + colorLength * 2, ostart + colorLength * 3).reduce(sum, 0) % 1);
-    return Color({
+    let color = {
       h: (hue + offhue) % 360,
       s: saturation,
-      l: lightness
-    }).rgbString()
+      l: (isBackground)? lightness: 100 - lightness
+    };
+    console.log(color);
+    return Color(color).rgbString()
   });
 }
 
@@ -230,6 +236,7 @@ App.defaultProps = {
     //size: 12,
     phenotype: {
       mutate: {
+        substitution: 0.03,
         incrementation: [1/5, 1/2],
         increment: [1/Fonts.length],
         upper: 40,
@@ -270,7 +277,7 @@ App.defaultProps = {
           fontFamily: Fonts,
         },
         card: {
-          backgroundColor: decodeColor(3),
+          backgroundColor: decodeColor(3, true),
         }
       }
     }
