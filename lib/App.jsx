@@ -12,6 +12,13 @@ import { BusinessCard } from '/lib/Card';
 import { ChatBot } from '/lib/ChatBot';
 import { defaultStyles } from '/lib/defaultStyles';
 
+let tutorial = [
+  "Select the one you think looks the best!",
+  "As you make actions your choices narrow and become more relevant.",
+  "People are making choices on the web all the time.",
+  "Through intelligent algorithms like this one, we can tailor the web to specific people, while coming to understand them better.",
+  "Select this card to apply it!"
+];
 @Radium
 export class App extends React.Component {
   constructor(props) {
@@ -26,6 +33,7 @@ export class App extends React.Component {
       selectedStyle: 0,
       selectedTitles: [{primary: "Software", secondary: "Data Science"}],
       styles: defaultStyles,
+      selections: 0
     };
   }
 
@@ -93,6 +101,12 @@ export class App extends React.Component {
     };
   }
   renderIntroduction(styles, {primary, secondary}, index) {
+    var title = `${primary} & ${secondary}`;
+    var name = "Paul Prae";
+    if (index < tutorial.length && this.state.evolve) {
+      title = tutorial[index];
+      name = "";
+    }
     return (
       <BusinessCard key={index}
         styles={_.merge({}, defaultStyles, styles, this.scaledBusinessCard())}
@@ -116,8 +130,8 @@ export class App extends React.Component {
           evolve: !this.state.evolve,
           selectedStyle: index,
         })}
-        title={`${primary} & ${secondary}`}
-        name={"Paul Prae"}
+        title={title}
+        name={name}
         buttonText={"Evolve"}
       />
     );
@@ -161,14 +175,9 @@ export class App extends React.Component {
                 onChoice={({traits: {styles, titles}}) => {
                   this.setState({
                     population: this.state.population,
-                    selectedStyles: this.state.selectedStyles.slice(
-                      this.state.selectedStyles.length - 10,
-                      this.state.selectedStyles.length
-                    ).concat(styles),
-                    selectedTitles: this.state.selectedTitles.slice(
-                      this.state.selectedTitles.length - 10,
-                      this.state.selectedTitles.length
-                    ).concat(titles)
+                    selectedStyles: this.state.selectedStyles.slice(-10).concat(styles),
+                    selectedTitles: this.state.selectedTitles.slice(-10).concat(titles),
+                    //selections: this.state.selections + 1
                   });
               }}>
               {({traits: {styles, titles: {primary, secondary}}}, index) => {
