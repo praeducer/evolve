@@ -13,10 +13,13 @@ import { ChatBot } from '/lib/ChatBot';
 import { defaultStyles } from '/lib/defaultStyles';
 
 let tutorial = [
-  "Select the one you think looks the best!",
-  "As you make actions your choices narrow and become more relevant.",
-  "People are making choices on the web all the time.",
-  "Through intelligent algorithms like this one, we can tailor the web to specific people, while coming to understand them better.",
+  "Select the one you think looks best!",
+  //"As you make choices your options converge.",
+  "People are constantly making choices.",
+  "Through intelligent algorithms like this one ...",
+  "we can understand individuals ...",
+  "... and tailor the web to them.",
+  //"... while coming to understand them better.",
   "Select this card to apply it!"
 ];
 @Radium
