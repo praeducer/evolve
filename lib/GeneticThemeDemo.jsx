@@ -1,7 +1,7 @@
 import React from 'react';
 import { Motion, spring } from 'react-motion';
 import Radium from 'radium';
-import { Individual, Population, Genome } from '/imports/genetic-experience-management/src';
+import { Individual, Population, Genome } from '/imports/dargen/src';
 
 
 export class GeneticThemeDemo extends React.Component {
