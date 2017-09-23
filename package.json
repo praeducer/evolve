@@ -1,5 +1,7 @@
 {
-  "name": "codasci",
+  "name": "paulprae",
+  "description": "A website for Paul Prae and his freelancing adventures.",
+  "version": "0.2.1",
   "private": true,
   "scripts": {
     "start": "meteor run"
