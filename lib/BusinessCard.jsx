@@ -1,4 +1,5 @@
 import React from "react";
+import { merge } from "lodash";
 import Icon from "react-simple-icons";
 import { Button } from "react-mdl";
 import { Motion, spring } from "react-motion";
@@ -117,7 +118,7 @@ export default class BusinessCard extends React.Component {
     let styles = Object.keys(transformations).reduce(
       (styles, key) =>
         transformations[key]
-          ? { ...styles, ...this[key](transformations[key], styles) }
+          ? merge(styles, this[key](transformations[key], styles))
           : styles,
       this.props.styles
     );
