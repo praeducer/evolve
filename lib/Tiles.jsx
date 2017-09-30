@@ -1,7 +1,5 @@
 import React from 'react';
-import Radium from 'radium';
 
-@Radium
 export class Tiles extends React.Component {
   constructor() {
     super();
@@ -12,7 +10,7 @@ export class Tiles extends React.Component {
   }
   renderChildren(child, i) {
     return (
-      <div key={i} style={[defaultStyles.tile, this.getColor(i)]}>
+      <div key={i} style={{...defaultStyles.tile, ...this.getColor(i)}}>
         {child}
       </div>
     );

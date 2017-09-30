@@ -1,5 +1,5 @@
 import React from 'react';
-import Radium from 'radium';
+import PropTypes from 'proptypes';
 import Color from 'color';
 import { Grid, Cell } from 'react-mdl';
 
@@ -19,6 +19,6 @@ export class Choose extends React.Component {
 }
 
 Choose.propTypes = {
-  children: React.PropTypes.array.isRequired,
-  choice: React.PropTypes.func.isRequired
+  children: PropTypes.array.isRequired,
+  choice: PropTypes.func.isRequired
 }

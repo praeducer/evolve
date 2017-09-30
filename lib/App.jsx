@@ -1,7 +1,6 @@
 import _ from "lodash";
 import React from "react";
 import { Motion, spring } from "react-motion";
-import Radium from "radium";
 import Icon from "react-simple-icons";
 import { Link } from "react-router";
 import { Layout, Header, Navigation, Content } from "react-mdl";
@@ -231,38 +230,6 @@ export class App extends React.Component {
   }
 }
 
-function decodeColor(o, isBackground = false) {
-  // Base Hue, Lightness Style.
-  let sum = (sum, value) => {
-    return sum
-  };
-  return (genome, start) => {
-    let colorLength = 2;
-    let ostart = start + colorLength + o * colorLength * 3;
-    let hue = 360 * (genome.slice(start, colorLength).reduce(sum, 0) % 1);
-    let lightness =
-      100 *
-      (genome
-        .slice(start + colorLength, start + colorLength * 2)
-        .reduce(sum, 0) %
-        1);
-    let saturation =
-      100 * (genome.slice(ostart, ostart + colorLength).reduce(sum, 0) % 1);
-    let offhue =
-      360 *
-      (genome
-        .slice(ostart + colorLength * 2, ostart + colorLength * 3)
-        .reduce(sum, 0) %
-        1);
-    let color = {
-      h: (hue + offhue) % 360,
-      s: saturation,
-      l: isBackground ? lightness : 100 - lightness
-    };
-    console.log(color);
-    return Color(color).rgbString();
-  };
-}
 
 const Fonts = [
   "Open Sans",
@@ -285,6 +252,42 @@ const Fonts = [
   "Prociono"
 ];
 
+function chooseElement(array) {
+  return (g) => array[Math.floor(g*array.length)]
+}
+
+function decodeColor(len, isBackground = false) {
+  // Base Hue, Lightness Style.
+  let sum = (sum, value) => {
+    return sum
+  };
+  return (...genome) => {
+    let colorLength = 2;
+    let hue = 360 * (genome.slice(0, colorLength).reduce(sum, 0) % 1);
+    let lightness =
+      100 *
+      (genome
+        .slice(colorLength, colorLength * 2)
+        .reduce(sum, 0) %
+        1);
+    let saturation =
+      100 * (genome.slice(0, colorLength).reduce(sum, 0) % 1);
+    let offhue =
+      360 *
+      (genome
+        .slice(colorLength * 2, colorLength * 3)
+        .reduce(sum, 0) %
+        1);
+    let color = {
+      h: (hue + offhue) % 360,
+      s: saturation,
+      l: isBackground ? lightness : 100 - lightness
+    };
+    console.log(color);
+    return Color(color).rgbString();
+  };
+}
+
 App.defaultProps = {
   sections: [
     {
@@ -301,9 +304,9 @@ App.defaultProps = {
         selection: 0.03,
       },
       {
-        name: g => ["incrementation", "decrementation"][Math.floor(g*2)],
+        name: chooseElement(["incrementation", "decrementation"]),
         selection: {
-          rate: g => [1/5, 1/2][Math.floor(g*2)],
+          rate:  chooseElement([1/5, 1/2]),
           selection: "style.title.color"
         },
         params: {
@@ -320,15 +323,15 @@ App.defaultProps = {
       }
       ],
       titles: {
-        primary: g => [
+        primary: chooseElement([
           "Software",
           "Engineering",
           "Marketing",
           "Applications",
           "Learning",
           "Solutions"
-        ][Math.floor(g*7)],
-        secondary: g => [
+        ]),
+        secondary: chooseElement([
           "Data Science",
           "Data Processing",
           "Data Collection",
@@ -336,18 +339,18 @@ App.defaultProps = {
           "Cognitive Computing",
           "Chat Bots",
           "Cloud Services"
-        ][Math.floor(g*7)]
+        ]),
       },
       styles: {
         title: {
           color: decodeColor(0),
-          fontWeight: g => [500, 700],
-          fontFamily: g => Fonts[Math.floor(Fonts.length*g)]
+          fontWeight: chooseElement([500, 700]),
+          fontFamily: chooseElement(Fonts)
         },
         text: {
           color: decodeColor(0),
-          fontWeight: g => [500, 700],
-          fontFamily: g => Fonts[Math.floor(Fonts.length*g)]
+          fontWeight: chooseElement([500, 700]),
+          fontFamily: chooseElement(Fonts)
         },
         card: {
           backgroundColor: decodeColor(0)

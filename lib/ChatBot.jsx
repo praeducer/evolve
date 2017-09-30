@@ -1,8 +1,6 @@
 import React from 'react';
-import Radium from 'radium';
 import { Badge } from 'react-mdl';
 
-@Radium
 export class ChatDiagram extends React.Component {
   constructor() {
     super();
@@ -13,7 +11,6 @@ export class ChatDiagram extends React.Component {
   }
 }
 
-@Radium
 export class ChatBot extends React.Component {
   constructor() {
     super();
@@ -55,15 +52,15 @@ export class ChatBot extends React.Component {
 
   renderFace() {
     return (
-      <div style={[defaultStyles.image, this.props.styles.imageContainer]}>
-        <img style={[defaultStyles.image]} src={this.props.avatar}/>
+      <div style={{...defaultStyles.image, ...this.props.styles.imageContainer}}>
+        <img style={defaultStyles.image} src={this.props.avatar}/>
       </div>
     );
   }
 
   renderMessage(message) {
     return (
-      <div style={[defaultStyles.chat, this.props.styles.chat]}>
+      <div style={{...defaultStyles.chat, ...this.props.styles.chat}}>
         {message}
       </div>
     );
@@ -71,7 +68,7 @@ export class ChatBot extends React.Component {
 
   renderChat({message=""}, iter) {
     return(
-      <div style={[defaultStyles.container, this.props.styles.container]} key={iter}>
+      <div style={{...defaultStyles.container, ...this.props.styles.container}} key={iter}>
         {this.renderFace()}
         {this.renderMessage(message)}
       </div>

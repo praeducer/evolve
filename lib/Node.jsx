@@ -1,9 +1,7 @@
 import React from 'react';
 import { Motion, spring } from 'react-motion';
-import Radium from 'radium';
 
 
-@Radium
 export class Node extends React.Component {
   constructor() {
     super();
@@ -14,7 +12,6 @@ export class Node extends React.Component {
   }
 }
 
-@Radium
 export class Edge extends React.Component {
   constructor() {
     super();

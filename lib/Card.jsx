@@ -1,6 +1,5 @@
 import _ from 'lodash';
 import React from 'react';
-import Radium from 'radium';
 import Icon from 'react-simple-icons';
 import { Motion, spring } from 'react-motion';
 
@@ -18,7 +17,6 @@ function pv2(p, a, b){
   return Math.min(a, b) + Math.abs(a - b) * p;
 }
 
-@Radium
 export class BusinessCard extends React.Component {
   constructor(props) {
     super(props);
@@ -108,39 +106,42 @@ export class BusinessCard extends React.Component {
       (transformations[key])?_.merge(styles, this[key](transformations[key], styles)):styles
     , this.props.styles);
     return (
-      <div style={[styles.businessCard, styles.card, {cursor: (!this.props.hasButton && this.props.onClick instanceof Function)? "pointer": undefined}]}
+      <div
+        style={{...styles.businessCard, ...styles.card,
+      ...{cursor: (!this.props.hasButton && this.props.onClick instanceof Function)? "pointer": undefined}
+      }}
         onClick={(this.props.hasButton)?undefined: this.props.onClick}>
-        <div style={[styles.titleContainer, styles.titleContainerExt]}>
-          <h6 style={[{whiteSpace: 'normal',
+        <div style={{...styles.titleContainer, ...styles.titleContainerExt}}>
+          <h6 style={{...{whiteSpace: 'normal',
             paddingLeft: 12,
             paddingRight: 12,
             paddingBottom: 0,
             paddingTop: 0,
-          }, styles.cardText, styles.text]}>
+          }, ...styles.cardText, ...styles.text}}>
             {title}
           </h6>
-          <h1 style={[styles.cardTitle, styles.title, {padding: 16}]}>
+          <h1 style={{...styles.cardTitle, ...styles.title, ...{padding: 16}}}>
             {name}
           </h1>
-          <div style={[{display: 'none'}, styles.button]}>
+          <div style={{...{display: 'none'}, ...styles.button}}>
             <Button style={{color: styles.card.backgroundColor, background: styles.text.color}} raised colored
               onClick={(this.props.hasButton)?this.props.onClick: undefined}>
               {buttonText}
             </Button>
           </div>
         </div>
-        <div style={[styles.cardText, styles.businessIcons]}>
-          <div style={[styles.contact, styles.text]}>
+        <div style={{...styles.cardText, ...styles.businessIcons}}>
+          <div style={{...styles.contact, ...styles.text}}>
             <div style={{maxWidth: 240}}>
               I’m a solutions architect who creates collaborative web technology to improve business and society.
               I build interactive systems that augment cognitive abilities and scale impact.
             </div>
             <hr style={{borderColor: 'inherit'}} />
           </div>
-          <div style={[{display: 'none'}, styles.icons]}>
+          <div style={{...{display: 'none'}, ...styles.icons}}>
             <a href="//blog.paulprae.com">
               <img src="/cute-closeup.jpg"
-                style={{ ...styles.image, {height: 24, padding: 8}}} />
+                style={{ ...styles.image, ...{height: 24, padding: 8}}} />
             </a>
             <a href="https://github.com/praeducer" >
               <Icon style={{padding: 8}} fill={styles.title.color || styles.icon.fill} size={styles.icon.size} name="github" />

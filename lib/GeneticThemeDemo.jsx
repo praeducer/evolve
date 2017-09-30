@@ -1,6 +1,6 @@
 import React from 'react';
+import PropTypes from 'proptypes';
 import { Motion, spring } from 'react-motion';
-import Radium from 'radium';
 import { Individual, Population, Genome } from '/imports/dargen/src';
 
 
@@ -49,7 +49,7 @@ export class GeneticThemeDemo extends React.Component {
   }
 }
 GeneticThemeDemo.propTypes = {
-  seedThemes: React.PropTypes.object,
+  seedThemes: PropTypes.object,
 };
 GeneticThemeDemo.defaultProps = {
 };
