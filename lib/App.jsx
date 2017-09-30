@@ -10,6 +10,7 @@ import { GeneticThemeDemo } from "/lib/GeneticThemeDemo";
 import { BusinessCard } from "/lib/Card";
 import { ChatBot } from "/lib/ChatBot";
 import { defaultStyles } from "/lib/defaultStyles";
+import EvolveSettings from "/imports/evolve/settings.js";
 
 let tutorial = [
   "Select the one you think looks best!",
@@ -40,36 +41,20 @@ export class App extends React.Component {
   }
 
   componentDidMount() {
-    this.setState({
-      content: []
-    });
-    window.onresize = () => this.forceUpdate();
-    window.Color = Color;
-  }
-  componentWillUnmount() {
-    delete window.onresize;
+    this.setState({ content: [] });
+    window.addEventListener("onresize", this.forceUpdate);
   }
 
-  getChats() {
-    return [
-      { message: "This business card could look a lot better." },
-      {
-        message: (
-          <span>
-            My electrical impulses tell me that <Link to="/demo/genetic">
-              you can help!
-            </Link>
-          </span>
-        )
-      },
-      { message: <Link to="/collaborators">Paul's Collaborators</Link> },
-      { message: <a href="http://paulprae.com">More about Paul.</a> }
-    ];
+  componentWillUnmount() {
+    window.removeEventListener("onresize", this.forceUpdate);
   }
+
   renderNavigation({ title = "Link", location = "" }) {
     return <a key={title} href={location}>{title}</a>;
   }
+
   // We want the cards to fill out page rows and columns.
+  // This doesn't always work, and there is probably a better solution.
   demoRows() {
     return Math.min(
       4,
@@ -120,6 +105,7 @@ export class App extends React.Component {
     };
   }
   renderIntroduction(styles, { primary, secondary }, index) {
+    // Component that can transform stabily between an introduction and a simple BusinessCard.
     var title = `${primary} & ${secondary}`;
     var name = "Paul Prae";
     if (index < tutorial.length && this.state.evolve) {
@@ -147,6 +133,7 @@ export class App extends React.Component {
   }
 
   render() {
+    // Some wild math to determine how many business cards should be on the page.
     let pageScale = Math.min(
       window.document.body.clientWidth /
         (this.demoColumns() * defaultStyles.businessCard.width),
@@ -159,6 +146,7 @@ export class App extends React.Component {
           <div style={{ height: "100%", textAlign: "center" }}>
             <div
               ref={el => {
+                // Stay scrolled to the left when changes to the DOM occur.
                 if (el) {
                   el.scrollLeft =
                     this.state.selectedStyles.length *
@@ -167,6 +155,7 @@ export class App extends React.Component {
               }}
               style={{
                 position: "relative",
+                // Fit the BusinessCard components to the entire page.
                 height: this.state.evolve
                   ? defaultStyles.businessCard.height * pageScale
                   : "100%",
@@ -175,7 +164,9 @@ export class App extends React.Component {
                 overflowY: "hidden"
               }}
             >
-              {this.state.selectedStyles.map((styles, index) =>
+              {
+              // Map all selected styles to the introduction animation.
+              this.state.selectedStyles.map((styles, index) =>
                 this.renderIntroduction(
                   styles,
                   this.state.selectedTitles[index],
@@ -183,26 +174,35 @@ export class App extends React.Component {
                 )
               )}
             </div>
-            {this.state.evolve
+            {
+            // Show the demo.
+            this.state.evolve
               ? <GeneticThemeDemo
                   key="demo"
-                  population={Object.assign({}, this.props.population, {
+                  population={
+                  // Create a population of the appropriate size to the screen size.
+                  {...this.props.population, ...{
                     size: (this.demoRows() - 1) * this.demoColumns()
-                  })}
-                  onChoice={({ traits: { styles, titles } }) => {
+                  }}}
+                  onChoice={
+                  // Copy chosen individual as style to state.
+                  ({ traits: { styles, titles } }) => {
                     this.setState({
+                      // Population has been mutated, and we need to set the state with that mutation in order to keep it.
                       population: this.state.population,
                       selectedStyles: this.state.selectedStyles
+                        // Only keep the 10 most recent styles.
                         .slice(-10)
                         .concat(styles),
                       selectedTitles: this.state.selectedTitles
                         .slice(-10)
                         .concat(titles)
-                      //selections: this.state.selections + 1
                     });
                   }}
                 >
-                  {(
+                  {
+                  // Given an individual, map the traits to a BusinessCard component.
+                  (
                     { traits: { styles, titles: { primary, secondary } } },
                     index
                   ) => {
@@ -212,12 +212,11 @@ export class App extends React.Component {
                         title={`${primary} & ${secondary}`}
                         name="Paul Prae"
                         buttonText="Select"
-                        styles={_.merge(
-                          {},
-                          defaultStyles,
-                          styles,
-                          this.scaledBusinessCard()
-                        )}
+                        styles={{
+                          ...defaultStyles,
+                          ...styles,
+                          ...this.scaledBusinessCard()
+                        }}
                       />
                     );
                   }}
@@ -230,64 +229,6 @@ export class App extends React.Component {
   }
 }
 
-
-const Fonts = [
-  "Open Sans",
-  "Josefin Slab",
-  "Arvo",
-  "Lato",
-  "Vollkorn",
-  "Abril Fatface",
-  "Ubuntu",
-  "PT Sans",
-  "PT Serif",
-  "Old Standard TT",
-  "Droid Sans",
-  "Anivers",
-  "Junction",
-  "Fertigo",
-  "Aller",
-  "Audimat",
-  "Delicious",
-  "Prociono"
-];
-
-function chooseElement(array) {
-  return (g) => array[Math.floor(g*array.length)]
-}
-
-function decodeColor(len, isBackground = false) {
-  // Base Hue, Lightness Style.
-  let sum = (sum, value) => {
-    return sum
-  };
-  return (...genome) => {
-    let colorLength = 2;
-    let hue = 360 * (genome.slice(0, colorLength).reduce(sum, 0) % 1);
-    let lightness =
-      100 *
-      (genome
-        .slice(colorLength, colorLength * 2)
-        .reduce(sum, 0) %
-        1);
-    let saturation =
-      100 * (genome.slice(0, colorLength).reduce(sum, 0) % 1);
-    let offhue =
-      360 *
-      (genome
-        .slice(colorLength * 2, colorLength * 3)
-        .reduce(sum, 0) %
-        1);
-    let color = {
-      h: (hue + offhue) % 360,
-      s: saturation,
-      l: isBackground ? lightness : 100 - lightness
-    };
-    console.log(color);
-    return Color(color).rgbString();
-  };
-}
-
 App.defaultProps = {
   sections: [
     {
@@ -295,67 +236,5 @@ App.defaultProps = {
       location: "/demo/genetic"
     }
   ],
-  population: {
-    //size: 12,
-    phenotype: {
-      mutate: [
-      {
-        name: "sustitution",
-        selection: 0.03,
-      },
-      {
-        name: chooseElement(["incrementation", "decrementation"]),
-        selection: {
-          rate:  chooseElement([1/5, 1/2]),
-          selection: "style.title.color"
-        },
-        params: {
-          increment: 1/60,
-          decrement: 1/60
-        }
-      },
-      {
-        name: "sustitution",
-        selection: {
-        rate: 0.1,
-        selection: 'mutate.1.name'
-        }
-      }
-      ],
-      titles: {
-        primary: chooseElement([
-          "Software",
-          "Engineering",
-          "Marketing",
-          "Applications",
-          "Learning",
-          "Solutions"
-        ]),
-        secondary: chooseElement([
-          "Data Science",
-          "Data Processing",
-          "Data Collection",
-          "Artificial Intelligence",
-          "Cognitive Computing",
-          "Chat Bots",
-          "Cloud Services"
-        ]),
-      },
-      styles: {
-        title: {
-          color: decodeColor(0),
-          fontWeight: chooseElement([500, 700]),
-          fontFamily: chooseElement(Fonts)
-        },
-        text: {
-          color: decodeColor(0),
-          fontWeight: chooseElement([500, 700]),
-          fontFamily: chooseElement(Fonts)
-        },
-        card: {
-          backgroundColor: decodeColor(0)
-        }
-      }
-    }
-  }
+  ...EvolveSettings
 };
