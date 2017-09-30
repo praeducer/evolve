@@ -139,7 +139,8 @@ export class BusinessCard extends React.Component {
           </div>
           <div style={[{display: 'none'}, styles.icons]}>
             <a href="//blog.paulprae.com">
-              <img src="/cute-closeup.jpg" style={[styles.image, {height: 24, padding: 8}]} />
+              <img src="/cute-closeup.jpg"
+                style={{ ...styles.image, {height: 24, padding: 8}}} />
             </a>
             <a href="https://github.com/praeducer" >
               <Icon style={{padding: 8}} fill={styles.title.color || styles.icon.fill} size={styles.icon.size} name="github" />
