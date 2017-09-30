@@ -1,27 +1,27 @@
 import React from "react";
 import { Layout, Content } from "react-mdl";
+import { throttle } from "lodash";
 
 import GeneticThemeDemo from "/lib/GeneticThemeDemo";
 import BusinessCard from "/lib/BusinessCard";
 import EvolveSettings from "/imports/evolve/settings.js";
+
+// TODO Really most of this should be in CSS or a preparser format.
+// But, I am necessarily passing around styles as objects anyways.
 import { defaultStyles } from "/lib/defaultStyles";
 
-let tutorial = [
-  "Select the one you think looks best!",
-  //"As you make choices your options converge.",
-  "People are constantly making choices.",
-  "Through intelligent algorithms like this one ...",
-  "we can understand individuals ...",
-  "... and tailor the web to them.",
-  //"... while coming to understand them better.",
-  "Select this card to apply it!"
-];
-
+/**
+ * @class App
+ * @desc
+ *
+ * The base element for our Router to display.
+ * This should really just hold the layout for the page, but it also
+ * holds a tangled introduction and evolve state right now.
+ *
+ */
 export class App extends React.Component {
   constructor(props) {
     super(props);
-    // I should probably store the default theme somewhere else.
-    // How hard would it be to consume css for the default state?
     this.state = {
       content: [],
       chats: [],
@@ -36,11 +36,13 @@ export class App extends React.Component {
 
   componentDidMount() {
     this.setState({ content: [] });
-    window.addEventListener("onresize", this.forceUpdate);
+    // Rerender the page when the window resizes.
+    this.onResizeListener = throttle(this.forceUpdate, 50);
+    window.addEventListener("onresize", this.onResizeListener);
   }
 
   componentWillUnmount() {
-    window.removeEventListener("onresize", this.forceUpdate);
+    window.removeEventListener("onresize", this.onResizeListener);
   }
 
   renderNavigation({ title = "Link", location = "" }) {
@@ -100,9 +102,20 @@ export class App extends React.Component {
     };
   }
   renderIntroduction(styles, { primary, secondary }, index) {
+    let tutorial = [
+      "Select the one you think looks best!",
+      //"As you make choices your options converge.",
+      "People are constantly making choices.",
+      "Through intelligent algorithms like this one ...",
+      "we can understand individuals ...",
+      "... and tailor the web to them.",
+      //"... while coming to understand them better.",
+      "Select this card to apply it!"
+    ];
+
     // Component that can transform stabily between an introduction and a simple BusinessCard.
-    var title = `${primary} & ${secondary}`;
-    var name = "Paul Prae";
+    let title = `${primary} & ${secondary}`;
+    let name = "Paul Prae";
     if (index < tutorial.length && this.state.evolve) {
       title = tutorial[index];
       name = "";
@@ -110,7 +123,7 @@ export class App extends React.Component {
     return (
       <BusinessCard
         key={index}
-        styles={{...defaultStyles, ...styles, ...this.scaledBusinessCard()}}
+        styles={{ ...defaultStyles, ...styles, ...this.scaledBusinessCard() }}
         isFullscreen={!this.state.evolve && index === this.state.selectedStyle}
         isHidden={!this.state.evolve && index !== this.state.selectedStyle}
         hasButton={!this.state.evolve && index === this.state.selectedStyle}
@@ -159,8 +172,7 @@ export class App extends React.Component {
                 overflowY: "hidden"
               }}
             >
-              {
-              // Map all selected styles to the introduction animation.
+              {// Map all selected styles to the introduction animation.
               this.state.selectedStyles.map((styles, index) =>
                 this.renderIntroduction(
                   styles,
@@ -169,18 +181,18 @@ export class App extends React.Component {
                 )
               )}
             </div>
-            {
-            // Show the demo.
+            {// Show the demo.
             this.state.evolve
               ? <GeneticThemeDemo
                   key="demo"
-                  population={
-                  // Create a population of the appropriate size to the screen size.
-                  {...this.props.population, ...{
-                    size: (this.demoRows() - 1) * this.demoColumns()
-                  }}}
-                  onChoice={
-                  // Copy chosen individual as style to state.
+                  population={// Create a population of the appropriate size to the screen size.
+                  {
+                    ...this.props.population,
+                    ...{
+                      size: (this.demoRows() - 1) * this.demoColumns()
+                    }
+                  }}
+                  onChoice={// Copy chosen individual as style to state.
                   ({ traits: { styles, titles } }) => {
                     this.setState({
                       selectedStyles: this.state.selectedStyles
@@ -193,8 +205,7 @@ export class App extends React.Component {
                     });
                   }}
                 >
-                  {
-                  // Given an individual, map the traits to a BusinessCard component.
+                  {// Given an individual, map the traits to a BusinessCard component.
                   (
                     { traits: { styles, titles: { primary, secondary } } },
                     index
@@ -223,6 +234,7 @@ export class App extends React.Component {
 }
 
 App.defaultProps = {
+  // TODO Add navigation based updates instead of this.state.evolve, etc.
   sections: [
     {
       title: "Demo",

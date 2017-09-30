@@ -5,10 +5,19 @@ import { Motion, spring } from "react-motion";
 
 import { defaultStyles } from "/lib/defaultStyles";
 
+// Helps to position scaled elements.
 function pv2(p, a, b) {
   return Math.min(a, b) + Math.abs(a - b) * p;
 }
 
+/**
+ * @class BusinessCard
+ * @desc
+ *
+ * A Business Card with options that allow it to stably transform into
+ * an introduction section of a website.
+ *
+ */
 export default class BusinessCard extends React.Component {
   constructor(props) {
     super(props);
@@ -16,6 +25,9 @@ export default class BusinessCard extends React.Component {
       initialProps: props
     };
   }
+  // These functions are toggle transformations that describe transitional
+  // states, but also work for absolute states. They are on at 1 or off at
+  // 0, but they can also be %30 on at 0.3, for example.
   isHidden(p, styles) {
     return {
       card: {
@@ -101,16 +113,18 @@ export default class BusinessCard extends React.Component {
       styles: {},
       ...restProps
     } = this.props;
+    // Compile any transformations into a styles object.
     let styles = Object.keys(transformations).reduce(
       (styles, key) =>
         transformations[key]
-          ? {...styles, ...this[key](transformations[key], styles)}
+          ? { ...styles, ...this[key](transformations[key], styles) }
           : styles,
       this.props.styles
     );
     return (
       <div
         style={{
+          // Styles are applied by name.
           ...styles.businessCard,
           ...styles.card,
           ...{
@@ -125,6 +139,8 @@ export default class BusinessCard extends React.Component {
         <div style={{ ...styles.titleContainer, ...styles.titleContainerExt }}>
           <h6
             style={{
+              // TODO There really shouldn't be any of these style objects
+              // here.
               ...{
                 whiteSpace: "normal",
                 paddingLeft: 12,
