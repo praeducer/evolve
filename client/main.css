@@ -1,4 +1,7 @@
-/* CSS declarations go here */
+/**
+ * This is the root CSS file for the Meteor client-side application.
+ */
+
 span.gc-cs-link {
   color: inherit;
   text-decoration: none;
