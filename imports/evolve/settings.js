@@ -1,3 +1,5 @@
+import Color from "color";
+
 let Titles = {
   Primary: [
     "Software",

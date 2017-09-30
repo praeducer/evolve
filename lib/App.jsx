@@ -1,16 +1,10 @@
-import _ from "lodash";
 import React from "react";
-import { Motion, spring } from "react-motion";
-import Icon from "react-simple-icons";
-import { Link } from "react-router";
-import { Layout, Header, Navigation, Content } from "react-mdl";
-import Color from "color";
+import { Layout, Content } from "react-mdl";
 
-import { GeneticThemeDemo } from "/lib/GeneticThemeDemo";
-import { BusinessCard } from "/lib/Card";
-import { ChatBot } from "/lib/ChatBot";
-import { defaultStyles } from "/lib/defaultStyles";
+import GeneticThemeDemo from "/lib/GeneticThemeDemo";
+import BusinessCard from "/lib/BusinessCard";
 import EvolveSettings from "/imports/evolve/settings.js";
+import { defaultStyles } from "/lib/defaultStyles";
 
 let tutorial = [
   "Select the one you think looks best!",
@@ -53,6 +47,7 @@ export class App extends React.Component {
     return <a key={title} href={location}>{title}</a>;
   }
 
+  // TODO Everything to do with the BusinessCards should be set to a new component.
   // We want the cards to fill out page rows and columns.
   // This doesn't always work, and there is probably a better solution.
   demoRows() {
@@ -115,7 +110,7 @@ export class App extends React.Component {
     return (
       <BusinessCard
         key={index}
-        styles={_.merge({}, defaultStyles, styles, this.scaledBusinessCard())}
+        styles={{...defaultStyles, ...styles, ...this.scaledBusinessCard()}}
         isFullscreen={!this.state.evolve && index === this.state.selectedStyle}
         isHidden={!this.state.evolve && index !== this.state.selectedStyle}
         hasButton={!this.state.evolve && index === this.state.selectedStyle}
@@ -188,8 +183,6 @@ export class App extends React.Component {
                   // Copy chosen individual as style to state.
                   ({ traits: { styles, titles } }) => {
                     this.setState({
-                      // Population has been mutated, and we need to set the state with that mutation in order to keep it.
-                      population: this.state.population,
                       selectedStyles: this.state.selectedStyles
                         // Only keep the 10 most recent styles.
                         .slice(-10)

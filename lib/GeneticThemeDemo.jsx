@@ -1,63 +1,66 @@
 import React from "react";
 import PropTypes from "proptypes";
-import { Motion, spring } from "react-motion";
-import { Individual, Population, Genome } from "/imports/dargen/src";
+import { Population } from "/imports/dargen/src";
 
-export class GeneticThemeDemo extends React.Component {
+/**
+ * @class GeneticThemeDemo
+ * @desc
+ *
+ * Takes a DarGen population manifest and a function to render
+ * individuals as children.
+ *
+ * Displays population as rendered children with onClick handlers.
+ *
+ */
+export default class GeneticThemeDemo extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      // Start population from the manifest given.
       population: new Population(props.population).evolve()
     };
   }
-  onChoice(choice) {
-    if (this.props.onChoice) {
-      this.props.onChoice(this.state.population.individuals[choice]);
-    }
 
-    let { identifier } = this.state.population.individuals[choice];
+  onChoice(choice) {
+    let { onChoice } = this.props;
+    let { population } = this.state;
+    let { identifier } = population.individuals[choice];
+
+    onChoice instanceof Function && onChoice(identifier);
+
     this.setState({
-      population: this.state.population.evolve({
+      // TODO This generation parameter to population.evolve should be passed in and stored in /imports/evolve settings.
+      population: population.evolve({
         fitness: individual => {
           return individual.identifier === identifier;
         },
         comparison: ({ value: a }, { value: b }) =>
           a && !b ? -1 : !a && b ? 1 : 0,
-        groups: this.state.population.individuals.length
+        groups: population.individuals.length
       })
     });
   }
-  getNarration() {
-    return [
-      { message: "Select the one you think looks the best!" },
-      { message: "People are making choices on the web all the time." },
-      {
-        message: "Through intelligent algorithms like this one, we can tailor the web to specific people, while coming to understand them better."
-      },
-      {
-        message: "As you make actions your choices narrow and become more relevant."
-      }
-    ];
-  }
+
   render() {
-    var individualsStyles = this.state.population.individuals.map(
-      i => i.traits.styles
-    );
-    var children = this.state.population.individuals
-      .map(this.props.children)
-      .map((child, index) =>
-        React.cloneElement(child, {
-          onClick: () => this.onChoice(index)
-        })
-      );
+    let { population: {individuals} } = this.state;
+    let { children, style } = this.props;
     return (
-      <div style={this.props.style}>
-        {children}
+      <div style={style}>
+        {individuals.map(children).map((child, index) =>
+          React.cloneElement(child, {
+            // Add onClick listening function so make selections.
+            onClick: () => this.onChoice(index)
+          })
+        )}
       </div>
     );
   }
 }
 GeneticThemeDemo.propTypes = {
-  seedThemes: PropTypes.object
+  seedThemes: PropTypes.object,
+  children: PropTypes.func
 };
-GeneticThemeDemo.defaultProps = {};
+// Simply dump JSON by default.
+GeneticThemeDemo.defaultProps = {
+  children: ({ traits }) => <code>{JSON.stringify(traits, null, 2)}</code>
+};
