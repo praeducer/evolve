@@ -177,7 +177,7 @@ export default class BusinessCard extends React.Component {
         <div style={{ ...styles.cardText, ...styles.businessIcons }}>
           <div style={{ ...styles.contact, ...styles.text }}>
             <div style={{ maxWidth: 240 }}>
-              I’m a solutions architect who creates collaborative web technology to improve business and society.
+              I’m a cloud architect with a specialization in artificial intelligence.
               I build interactive systems that augment cognitive abilities and scale impact.
             </div>
             <hr style={{ borderColor: "inherit" }} />
