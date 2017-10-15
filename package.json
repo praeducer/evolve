@@ -1,6 +1,6 @@
 {
   "name": "paulprae",
-  "description": "A website for Paul Prae and his freelancing adventures.",
+  "description": "A demo for how genetic algorithms can be applied to improve the user experience.",
   "version": "0.2.1",
   "private": true,
   "scripts": {
