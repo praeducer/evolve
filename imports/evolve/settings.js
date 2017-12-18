@@ -1,4 +1,6 @@
 import Color from "color";
+import { PhenotypeHelpers } from "dargen";
+let { choose } = PhenotypeHelpers;
 
 let Titles = {
   Primary: [
@@ -45,66 +47,56 @@ const Fonts = [
 
 export default (EvolveSettings = {
   population: {
-    phenotype: {
-      mutate: [
-        {
-          name: "sustitution",
-          selection: 0.03
-        },
-        {
-          name: chooseElement(["incrementation", "decrementation"]),
-          selection: {
-            rate: chooseElement([1 / 5, 1 / 2]),
-            selection: "style.title.color"
+    proto: {
+      phenotype: {
+        mutate: [
+          {
+            name: "substitution",
+            selection: 0.05
           },
-          params: {
-            increment: 1 / 60,
-            decrement: 1 / 60
+          {
+            name: choose(["incrementation", "decrementation"]),
+            selection: {
+              rate: choose([1 / 5, 1 / 2]),
+              selection: "styles.title.color"
+            },
+            params: {
+              increment: 1 / 60,
+              decrement: 1 / 60
+            }
+          },
+          {
+            name: "substitution",
+            selection: {
+              rate: 0.05,
+              selection: "baseHue"
+            }
           }
+        ],
+        titles: {
+          primary: choose(Titles.Primary),
+          secondary: choose(Titles.Secondary)
         },
-        {
-          name: "sustitution",
-          selection: {
-            rate: 0.1,
-            selection: "mutate.1.name"
+        baseHue: g => g,
+        styles: {
+          title: {
+            color: decodeColor,
+            fontWeight: choose(FontWeights),
+            fontFamily: choose(Fonts)
+          },
+          text: {
+            color: decodeColor,
+            fontWeight: choose(FontWeights),
+            fontFamily: choose(Fonts)
+          },
+          card: {
+            backgroundColor: decodeColor
           }
-        },
-        {
-          name: "substitution",
-          selection: {
-            rate: 0.05,
-            selection: "baseHue"
-          }
-        }
-      ],
-      titles: {
-        primary: chooseElement(Titles.Primary),
-        secondary: chooseElement(Titles.Secondary)
-      },
-      baseHue: g => g,
-      styles: {
-        title: {
-          color: decodeColor,
-          fontWeight: chooseElement(FontWeights),
-          fontFamily: chooseElement(Fonts)
-        },
-        text: {
-          color: decodeColor,
-          fontWeight: chooseElement(FontWeights),
-          fontFamily: chooseElement(Fonts)
-        },
-        card: {
-          backgroundColor: decodeColor
         }
       }
     }
   }
 });
-
-
-function chooseElement(arr) {
-  return g => arr[Math.floor(g * arr.length)];
-}
 
 function decodeColor(c1, c2, c3) {
   let [h, s, l] = Array.from(arguments);

@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "proptypes";
-import { Population } from "/imports/dargen/src";
+import { Population } from "dargen";
 
 /**
  * @class GeneticThemeDemo
@@ -17,38 +17,41 @@ export default class GeneticThemeDemo extends React.Component {
     super(props);
     this.state = {
       // Start population from the manifest given.
-      population: new Population(props.population).evolve()
+      population: new Population({
+        proto: props.population.proto,
+        individuals: props.population.size
+      })
     };
   }
 
   onChoice(choice) {
     let { onChoice } = this.props;
     let { population } = this.state;
-    let { identifier } = population.individuals[choice];
+    let chosen = population.individuals[choice];
+    let { identifier } = chosen;
 
-    onChoice instanceof Function && onChoice(identifier);
+    onChoice instanceof Function && onChoice(chosen);
 
+    Population.Fitness["selected"] = individual =>
+      individual.identifier === identifier ? 0 : 1;
+    population.crossover([
+      true,
+      { sort: { value: "selected", comparison: "ascending" } }
+    ]);
+    population.mutate(true);
     this.setState({
-      // TODO This generation parameter to population.evolve should be passed in and stored in /imports/evolve settings.
-      population: population.evolve({
-        fitness: individual => {
-          return individual.identifier === identifier;
-        },
-        comparison: ({ value: a }, { value: b }) =>
-          a && !b ? -1 : !a && b ? 1 : 0,
-        groups: population.individuals.length
-      })
+      population: population
     });
   }
 
   render() {
-    let { population: {individuals} } = this.state;
+    let { population: { individuals } } = this.state;
     let { children, style } = this.props;
     return (
       <div style={style}>
         {individuals.map(children).map((child, index) =>
           React.cloneElement(child, {
-            // Add onClick listening function so make selections.
+            // Add onClick listening function to make selections.
             onClick: () => this.onChoice(index)
           })
         )}

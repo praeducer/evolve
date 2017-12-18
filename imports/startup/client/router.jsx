@@ -1,13 +1,13 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { Router, Route, browserHistory } from 'react-router';
+import { BrowserRouter, Route } from 'react-router-dom';
 import App from '/lib/App.jsx';
 
 // Wait until Meteor is loaded to render the page.
 Meteor.startup( () => {
   render((
-    <Router history={browserHistory}>
+    <BrowserRouter>
       <Route path="/" component={App} />
-    </Router>
+    </BrowserRouter>
   ), document.getElementById('root'))
 });

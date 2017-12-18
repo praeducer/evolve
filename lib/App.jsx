@@ -6,7 +6,7 @@ import GeneticThemeDemo from "/lib/GeneticThemeDemo";
 import BusinessCard from "/lib/BusinessCard";
 import EvolveSettings from "/imports/evolve/settings.js";
 
-// TODO Really most of this should be in CSS or a preparser format.
+// TODO: Really most of this should be in CSS or a preparser format.
 // But, I am necessarily passing around styles as objects anyways.
 import { defaultStyles } from "/lib/defaultStyles";
 
@@ -19,7 +19,7 @@ import { defaultStyles } from "/lib/defaultStyles";
  * holds a tangled introduction and evolve state right now.
  *
  */
-export class App extends React.Component {
+export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -28,6 +28,7 @@ export class App extends React.Component {
       evolve: false,
       selectedStyles: [defaultStyles],
       selectedStyle: 0,
+      selectedNames: [{primary: "Jenny", secondary: "Smith"}],
       selectedTitles: [{ primary: "Software", secondary: "Data Science" }],
       styles: defaultStyles,
       selections: 0
@@ -46,10 +47,14 @@ export class App extends React.Component {
   }
 
   renderNavigation({ title = "Link", location = "" }) {
-    return <a key={title} href={location}>{title}</a>;
+    return (
+      <a key={title} href={location}>
+        {title}
+      </a>
+    );
   }
 
-  // TODO Everything to do with the BusinessCards should be set to a new component.
+  // TODO: Everything to do with the BusinessCards should be set to a new component.
   // We want the cards to fill out page rows and columns.
   // This doesn't always work, and there is probably a better solution.
   demoRows() {
@@ -93,9 +98,10 @@ export class App extends React.Component {
         fontSize: defaultStyles.cardText.fontSize * scale
       },
       titleContainer: {
-        marginBottom: (defaultStyles.cardTitle.fontSize * scale +
-          defaultStyles.cardText.fontSize * scale +
-          40) /
+        marginBottom:
+          (defaultStyles.cardTitle.fontSize * scale +
+            defaultStyles.cardText.fontSize * scale +
+            40) /
           2 *
           -1
       }
@@ -115,7 +121,7 @@ export class App extends React.Component {
 
     // Component that can transform stabily between an introduction and a simple BusinessCard.
     let title = `${primary} & ${secondary}`;
-    let name = "Paul Prae";
+    let name = "Not Paul Prae";
     if (index < tutorial.length && this.state.evolve) {
       title = tutorial[index];
       name = "";
@@ -132,7 +138,8 @@ export class App extends React.Component {
           this.setState({
             evolve: !this.state.evolve,
             selectedStyle: index
-          })}
+          })
+        }
         title={title}
         name={name}
         buttonText={"Evolve"}
@@ -182,17 +189,18 @@ export class App extends React.Component {
               )}
             </div>
             {// Show the demo.
-            this.state.evolve
-              ? <GeneticThemeDemo
-                  key="demo"
-                  population={// Create a population of the appropriate size to the screen size.
+            this.state.evolve ? (
+              <GeneticThemeDemo
+                key="demo"
+                population={
+                  // Create a population of the appropriate size to the screen size.
                   {
                     ...this.props.population,
-                    ...{
-                      size: (this.demoRows() - 1) * this.demoColumns()
-                    }
-                  }}
-                  onChoice={// Copy chosen individual as style to state.
+                    size: (this.demoRows() - 1) * this.demoColumns()
+                  }
+                }
+                onChoice={
+                  // Copy chosen individual as style to state.
                   ({ traits: { styles, titles } }) => {
                     this.setState({
                       selectedStyles: this.state.selectedStyles
@@ -203,29 +211,33 @@ export class App extends React.Component {
                         .slice(-10)
                         .concat(titles)
                     });
-                  }}
-                >
-                  {// Given an individual, map the traits to a BusinessCard component.
-                  (
-                    { traits: { styles, titles: { primary, secondary } } },
-                    index
-                  ) => {
-                    return (
-                      <BusinessCard
-                        key={index}
-                        title={`${primary} & ${secondary}`}
-                        name="Paul Prae"
-                        buttonText="Select"
-                        styles={{
-                          ...defaultStyles,
-                          ...styles,
-                          ...this.scaledBusinessCard()
-                        }}
-                      />
-                    );
-                  }}
-                </GeneticThemeDemo>
-              : undefined}
+                  }
+                }
+              >
+                {// Given an individual, map the traits to a BusinessCard component.
+                (
+                  individual,
+                  index
+                ) => {
+                  let { traits: { styles, titles: { primary, secondary } } } = individual;
+                  return (
+                    <BusinessCard
+                      key={index}
+                      title={`${primary} & ${secondary}`}
+                      name="Not Paul Prae"
+                      buttonText="Select"
+                      styles={{
+                        ...defaultStyles,
+                        ...styles,
+                        ...this.scaledBusinessCard()
+                      }}
+                    />
+                  );
+                }}
+              </GeneticThemeDemo>
+            ) : (
+              undefined
+            )}
           </div>
         </Content>
       </Layout>

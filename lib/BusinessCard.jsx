@@ -15,8 +15,8 @@ function pv2(p, a, b) {
  * @class BusinessCard
  * @desc
  *
- * A Business Card with options that allow it to stably transform into
- * an introduction section of a website.
+ * A Business Card with options thag allow it to stably transform into
+ g an introduction section of a website.
  *
  */
 export default class BusinessCard extends React.Component {
@@ -126,7 +126,7 @@ export default class BusinessCard extends React.Component {
       <div
         style={{
           // Styles are applied by name.
-          ...styles.businessCard,
+          ...defaultStyles.businessCard,
           ...styles.card,
           ...{
             cursor: !this.props.hasButton &&
@@ -172,55 +172,6 @@ export default class BusinessCard extends React.Component {
             >
               {buttonText}
             </Button>
-          </div>
-        </div>
-        <div style={{ ...styles.cardText, ...styles.businessIcons }}>
-          <div style={{ ...styles.contact, ...styles.text }}>
-            <div style={{ maxWidth: 240 }}>
-              I’m a cloud architect with a specialization in artificial intelligence.
-              I build interactive systems that augment cognitive abilities and scale impact.
-            </div>
-            <hr style={{ borderColor: "inherit" }} />
-          </div>
-          <div style={{ ...{ display: "none" }, ...styles.icons }}>
-            <a href="//blog.paulprae.com">
-              <img
-                src="/cute-closeup.jpg"
-                style={{ ...styles.image, ...{ height: 24, padding: 8 } }}
-              />
-            </a>
-            <a href="https://github.com/praeducer">
-              <Icon
-                style={{ padding: 8 }}
-                fill={styles.title.color || styles.icon.fill}
-                size={styles.icon.size}
-                name="github"
-              />
-            </a>
-            <a href="https://twitter.com/praeducer">
-              <Icon
-                style={{ padding: 8 }}
-                fill={styles.title.color || styles.icon.fill}
-                size={styles.icon.size}
-                name="twitter"
-              />
-            </a>
-            <a href="https://linkedin.com/in/paulprae">
-              <Icon
-                style={{ padding: 8 }}
-                fill={styles.title.color || styles.icon.fill}
-                size={styles.icon.size}
-                name="linkedin"
-              />
-            </a>
-            <a href="https://instagram.com/praeducer">
-              <Icon
-                style={{ padding: 8 }}
-                fill={styles.title.color || styles.icon.fill}
-                size={styles.icon.size}
-                name="instagram"
-              />
-            </a>
           </div>
         </div>
       </div>
